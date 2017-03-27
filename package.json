@@ -1,0 +1,50 @@
+{
+  "name": "create-dmg",
+  "version": "0.0.0",
+  "description": "Create a DMG from an app (macOS)",
+  "license": "MIT",
+  "repository": "sindresorhus/create-dmg",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "bin": {
+    "create-dmg": "cli.js"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "xo && ava"
+  },
+  "files": [
+    "cli.js",
+    "assets"
+  ],
+  "keywords": [
+    "cli-app",
+    "cli",
+    "create",
+    "dmg",
+    "disk",
+    "image",
+    "macos",
+    "mac",
+    "app",
+    "application",
+    "apple"
+  ],
+  "dependencies": {
+    "appdmg": "^0.4.5",
+    "execa": "^0.6.3",
+    "meow": "^3.4.2",
+    "ora": "^1.2.0",
+    "plist": "^2.0.1"
+  },
+  "devDependencies": {
+    "ava": "*",
+    "tempfile": "^1.1.1",
+    "xo": "*"
+  }
+}
