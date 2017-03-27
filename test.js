@@ -8,5 +8,5 @@ test(async t => {
 	const cwd = tempfile();
 	fs.mkdirSync(cwd);
 	await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixture.app')], {cwd});
-	t.true(fs.existsSync(path.join(cwd, 'fixture 0.0.1.dmg')));
+	t.true(fs.existsSync(path.join(cwd, 'fixture-0.0.1.dmg')));
 });

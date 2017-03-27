@@ -30,7 +30,7 @@ const appPath = path.resolve(cli.input[0]);
 const appInfo = plist.parse(fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8'));
 const appName = appInfo.CFBundleName;
 const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
-const dmgPath = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
+const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
 
 const ora = new Ora('Creating DMG');
 ora.start();
