@@ -29,7 +29,9 @@ $ create-dmg --help
 
 ## DMG
 
-The created DMG is code signed, requires macOS 10.11 or later, and has the filename `appName-appVersion.dmg`, for example `Lungo-1.0.0.dmg`.
+The DMG requires macOS 10.11 or later and has the filename `appName-appVersion.dmg`, for example `Lungo-1.0.0.dmg`.
+
+It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
 
 <img src="screenshot-dmg.png" width="772">
 
