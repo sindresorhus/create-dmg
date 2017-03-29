@@ -90,7 +90,10 @@ ee.on('finish', () => {
 
 		ora.info(`Code signing identity: ${match[1]}`).start();
 		ora.succeed('DMG created');
-	}).catch(ora.fail.bind(ora));
+	}).catch(err => {
+		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${err.stderr.trim()}`);
+		process.exit(1);
+	});
 });
 
 ee.on('error', err => {
