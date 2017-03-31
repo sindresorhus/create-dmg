@@ -11,6 +11,8 @@
 
 ## Install
 
+Ensure you have [Node.js](https://nodejs.org) 4 or later installed. Then run the following:
+
 ```
 $ npm install --global create-dmg
 ```
