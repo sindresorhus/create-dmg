@@ -89,7 +89,7 @@ ee.on('progress', info => {
 });
 
 ee.on('finish', () => {
-	ora.text = 'Code signing DMG';
+	ora.text = 'Code-signing DMG';
 
 	execa('codesign', ['--sign', 'Developer ID Application', dmgPath]).then(() => {
 		return execa.stderr('codesign', [dmgPath, '--display', '--verbose=2']);
@@ -97,11 +97,11 @@ ee.on('finish', () => {
 		const match = /^Authority=(.*)$/m.exec(stderr);
 
 		if (!match) {
-			ora.fail('Not code signed');
+			ora.fail('Not code-signed');
 			process.exit(1);
 		}
 
-		ora.info(`Code signing identity: ${match[1]}`).start();
+		ora.info(`Code-signing identity: ${match[1]}`).start();
 		ora.succeed('DMG created');
 	}).catch(err => {
 		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${err.stderr.trim()}`);
