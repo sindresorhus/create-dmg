@@ -27,7 +27,20 @@ if (cli.input.length === 0) {
 }
 
 const appPath = path.resolve(cli.input[0]);
-const appInfo = plist.parse(fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8'));
+
+let infoPlist;
+try {
+	infoPlist = fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8');
+} catch (err) {
+	if (err.code === 'ENOENT') {
+		console.error(`Could not find "${path.relative(process.cwd(), appPath)}"`);
+		process.exit(1);
+	}
+
+	throw err;
+}
+
+const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
 const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
