@@ -1,6 +1,6 @@
 {
   "name": "create-dmg",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Create a good-looking DMG for your macOS app in seconds",
   "license": "MIT",
   "repository": "sindresorhus/create-dmg",
