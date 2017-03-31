@@ -1,8 +1,10 @@
 # create-dmg [![Build Status](https://travis-ci.org/sindresorhus/create-dmg.svg?branch=master)](https://travis-ci.org/sindresorhus/create-dmg)
 
-> Create a [DMG](https://en.m.wikipedia.org/wiki/Apple_Disk_Image) from an app *(macOS)*
+> Create a good-looking [DMG](https://en.m.wikipedia.org/wiki/Apple_Disk_Image) for your macOS app in seconds
 
-<img src="screenshot-cli.gif" width="529">
+<img src="screenshot-cli.gif" width="998">
+
+**Discuss it on [Product Hunt](https://www.producthunt.com/posts/create-dmg) and [Twitter](https://twitter.com/sindresorhus/status/846416556754010112).**
 
 *This tool is intentionally opinionated and simple. I'm not interested in adding lots of options.*
 
