@@ -12,9 +12,16 @@ const cli = meow(`
 	Usage
 	  $ create-dmg <app>
 
+  Options
+		--format, -f  DMG file format
+
 	Example
 	  $ create-dmg 'Lungo.app'
-`);
+`, {
+	alias: {
+		f: 'format'
+	}
+});
 
 if (process.platform !== 'darwin') {
 	console.error('macOS only');
@@ -44,6 +51,7 @@ const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
 const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
+const dmgFormat = cli.flags.format || 'ULFO';
 
 const ora = new Ora('Creating DMG');
 ora.start();
@@ -58,7 +66,7 @@ const ee = appdmg({
 		// https://github.com/LinusU/node-appdmg/issues/135
 		background: path.join(__dirname, 'assets/dmg-background.png'),
 		'icon-size': 160,
-		format: 'ULFO',
+		format: dmgFormat,
 		window: {
 			size: {
 				width: 660,
