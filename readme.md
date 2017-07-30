@@ -10,6 +10,8 @@ Imagine you have finished a macOS app, exported it from Xcode, and now want to d
 
 *This tool is intentionally opinionated and simple. I'm not interested in adding lots of options.*
 
+You might also find my [`LaunchAtLogin`](https://github.com/sindresorhus/LaunchAtLogin) project useful.
+
 
 ## Install
 
