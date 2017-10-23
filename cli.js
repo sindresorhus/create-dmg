@@ -42,7 +42,7 @@ try {
 
 const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
-const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
+// `const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
 
 const ora = new Ora('Creating DMG');
