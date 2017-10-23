@@ -36,15 +36,15 @@
     "apple"
   ],
   "dependencies": {
-    "appdmg": "^0.4.5",
-    "execa": "^0.6.3",
+    "appdmg": "^0.5.1",
+    "execa": "^0.8.0",
     "meow": "^3.4.2",
     "ora": "^1.2.0",
     "plist": "^2.0.1"
   },
   "devDependencies": {
     "ava": "*",
-    "tempfile": "^1.1.1",
+    "tempfile": "^2.0.0",
     "xo": "*"
   }
 }
