@@ -53,7 +53,9 @@ const ee = appdmg({
 	basepath: __dirname,
 	specification: {
 		title: appName,
-		icon: path.join(appPath, 'Contents/Resources', `${appIconName}.icns`),
+		// Disabled because of #16
+		// icon: path.join(appPath, 'Contents/Resources', `${appIconName}.icns`),
+		//
 		// Use transparent background and `background-color` option when this is fixed:
 		// https://github.com/LinusU/node-appdmg/issues/135
 		background: path.join(__dirname, 'assets/dmg-background.png'),
