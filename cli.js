@@ -29,7 +29,7 @@ if (cli.input.length === 0) {
 
 const appPath = path.resolve(cli.input[0]);
 
-let destPath = ".";
+let destPath = '.';
 if (cli.input.length > 1) {
 	destPath = path.resolve(cli.input[1]);
 }
