@@ -11,7 +11,7 @@ const execa = require('execa');
 const cli = meow(`
 	Usage
 	  $ create-dmg <app>
-
+	
 	Example
 	  $ create-dmg 'Lungo.app'
 `);
@@ -28,6 +28,11 @@ if (cli.input.length === 0) {
 
 const appPath = path.resolve(cli.input[0]);
 
+let destPath = ".";
+if (cli.input.length > 1) {
+	destPath = path.resolve(cli.input[1]);
+}
+
 let infoPlist;
 try {
 	infoPlist = fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8');
@@ -43,7 +48,7 @@ try {
 const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
 // `const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
-const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
+const dmgPath = `${destPath}/${appName}-${appInfo.CFBundleShortVersionString}.dmg`;
 
 const ora = new Ora('Creating DMG');
 ora.start();
