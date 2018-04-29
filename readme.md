@@ -27,11 +27,12 @@ $ npm install --global create-dmg
 ```
 $ create-dmg --help
 
-  Usage
-    $ create-dmg <app>
-
-  Example
-    $ create-dmg 'Lungo.app'
+	Usage:
+	  $ create-dmg <app> [destination]
+	
+	Examples:
+	  $ create-dmg 'Lungo.app'
+	  $ create-dmg 'Lungo.app' Build/Releases/
 ```
 
 

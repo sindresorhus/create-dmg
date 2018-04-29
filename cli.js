@@ -9,11 +9,12 @@ const Ora = require('ora');
 const execa = require('execa');
 
 const cli = meow(`
-	Usage
-	  $ create-dmg <app>
-
-	Example
+	Usage:
+	  $ create-dmg <app> [destination]
+	
+	Examples:
 	  $ create-dmg 'Lungo.app'
+	  $ create-dmg 'Lungo.app' Build/Releases/
 `);
 
 if (process.platform !== 'darwin') {
@@ -27,6 +28,11 @@ if (cli.input.length === 0) {
 }
 
 const appPath = path.resolve(cli.input[0]);
+
+let destPath = '.';
+if (cli.input.length > 1) {
+	destPath = path.resolve(cli.input[1]);
+}
 
 let infoPlist;
 try {
