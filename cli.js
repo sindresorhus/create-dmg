@@ -9,12 +9,12 @@ const Ora = require('ora');
 const execa = require('execa');
 
 const cli = meow(`
-	Usage:
+	Usage
 	  $ create-dmg <app> [destination]
-	
-	Examples:
+
+	Examples
 	  $ create-dmg 'Lungo.app'
-	  $ create-dmg 'Lungo.app' Build/Releases/
+	  $ create-dmg 'Lungo.app' Build/Releases
 `);
 
 if (process.platform !== 'darwin') {
@@ -29,7 +29,7 @@ if (cli.input.length === 0) {
 
 const appPath = path.resolve(cli.input[0]);
 
-let destPath = '.';
+let destPath = process.cwd();
 if (cli.input.length > 1) {
 	destPath = path.resolve(cli.input[1]);
 }
@@ -49,7 +49,7 @@ try {
 const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
 // `const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
-const dmgPath = `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`;
+const dmgPath = path.resolve(destPath, `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`);
 
 const ora = new Ora('Creating DMG');
 ora.start();
