@@ -16,5 +16,5 @@ test('main', async t => {
 		}
 	}
 
-	t.true(fs.existsSync(path.join(cwd, 'fixture-0.0.1.dmg')));
+	t.true(fs.existsSync(path.join(cwd, 'Fixture 0.0.1.dmg')));
 });
