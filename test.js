@@ -2,11 +2,10 @@ import path from 'path';
 import fs from 'fs';
 import test from 'ava';
 import execa from 'execa';
-import tempfile from 'tempfile';
+import tempy from 'tempy';
 
-test(async t => {
-	const cwd = tempfile();
-	fs.mkdirSync(cwd);
+test('main', async t => {
+	const cwd = tempy.directory();
 
 	try {
 		await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixture.app')], {cwd});

@@ -8,6 +8,11 @@ const plist = require('plist');
 const Ora = require('ora');
 const execa = require('execa');
 
+if (process.platform !== 'darwin') {
+	console.error('macOS only');
+	process.exit(1);
+}
+
 const cli = meow(`
 	Usage
 	  $ create-dmg <app> [destination]
@@ -17,21 +22,15 @@ const cli = meow(`
 	  $ create-dmg 'Lungo.app' Build/Releases
 `);
 
-if (process.platform !== 'darwin') {
-	console.error('macOS only');
-	process.exit(1);
-}
+let [appPath, destPath] = cli.input;
 
-if (cli.input.length === 0) {
+if (!appPath) {
 	console.error('Specify an app');
 	process.exit(1);
 }
 
-const appPath = path.resolve(cli.input[0]);
-
-let destPath = process.cwd();
-if (cli.input.length > 1) {
-	destPath = path.resolve(cli.input[1]);
+if (!destPath) {
+	destPath = process.cwd();
 }
 
 let infoPlist;
@@ -39,7 +38,7 @@ try {
 	infoPlist = fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8');
 } catch (err) {
 	if (err.code === 'ENOENT') {
-		console.error(`Could not find "${path.relative(process.cwd(), appPath)}"`);
+		console.error(`Could not find \`${path.relative(process.cwd(), appPath)}\``);
 		process.exit(1);
 	}
 
@@ -49,7 +48,7 @@ try {
 const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleName;
 // `const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
-const dmgPath = path.resolve(destPath, `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`);
+const dmgPath = path.join(destPath, `${appName.replace(/ /g, '-')}-${appInfo.CFBundleShortVersionString}.dmg`);
 
 const ora = new Ora('Creating DMG');
 ora.start();
@@ -96,14 +95,14 @@ ee.on('progress', info => {
 	}
 });
 
-ee.on('finish', () => {
+ee.on('finish', async () => {
 	ora.text = 'Code signing DMG';
 
-	execa('codesign', ['--sign', 'Developer ID Application', dmgPath]).then(() => {
-		return execa.stderr('codesign', [dmgPath, '--display', '--verbose=2']);
-	}).then(stderr => {
-		const match = /^Authority=(.*)$/m.exec(stderr);
+	try {
+		await execa('codesign', ['--sign', 'Developer ID Application', dmgPath]);
+		const {stderr} = await execa('codesign', [dmgPath, '--display', '--verbose=2']);
 
+		const match = /^Authority=(.*)$/m.exec(stderr);
 		if (!match) {
 			ora.fail('Not code signed');
 			process.exit(1);
@@ -111,13 +110,13 @@ ee.on('finish', () => {
 
 		ora.info(`Code signing identity: ${match[1]}`).start();
 		ora.succeed('DMG created');
-	}).catch(err => {
+	} catch (err) {
 		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${err.stderr.trim()}`);
 		process.exit(1);
-	});
+	}
 });
 
-ee.on('error', err => {
-	ora.fail(err);
+ee.on('error', error => {
+	ora.fail(error);
 	process.exit(1);
 });

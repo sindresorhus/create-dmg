@@ -13,7 +13,7 @@
 		"create-dmg": "cli.js"
 	},
 	"engines": {
-		"node": ">=4"
+		"node": ">=8"
 	},
 	"scripts": {
 		"test": "xo && ava"
@@ -36,15 +36,15 @@
 		"apple"
 	],
 	"dependencies": {
-		"appdmg": "^0.5.1",
-		"execa": "^0.8.0",
-		"meow": "^3.4.2",
-		"ora": "^1.2.0",
-		"plist": "^2.0.1"
+		"appdmg": "^0.5.2",
+		"execa": "^0.10.0",
+		"meow": "^5.0.0",
+		"ora": "^2.0.0",
+		"plist": "^3.0.1"
 	},
 	"devDependencies": {
 		"ava": "*",
-		"tempfile": "^2.0.0",
+		"tempy": "^0.2.1",
 		"xo": "*"
 	}
 }
