@@ -17,10 +17,19 @@ const cli = meow(`
 	Usage
 	  $ create-dmg <app> [destination]
 
+	Options
+	  --overwrite  Overwrite existing DMG with the same name
+
 	Examples
 	  $ create-dmg 'Lungo.app'
 	  $ create-dmg 'Lungo.app' Build/Releases
-`);
+`, {
+	flags: {
+		overwrite: {
+			type: 'boolean'
+		}
+	}
+});
 
 let [appPath, destPath] = cli.input;
 
@@ -52,6 +61,12 @@ const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionSt
 
 const ora = new Ora('Creating DMG');
 ora.start();
+
+if (cli.flags.overwrite) {
+	try {
+		fs.unlinkSync(dmgPath);
+	} catch (_) {}
+}
 
 const ee = appdmg({
 	target: dmgPath,

@@ -30,6 +30,9 @@ $ create-dmg --help
   Usage
     $ create-dmg <app> [destination]
 
+  Options
+    --overwrite  Overwrite existing DMG with the same name
+
   Examples
     $ create-dmg 'Lungo.app'
     $ create-dmg 'Lungo.app' Build/Releases
