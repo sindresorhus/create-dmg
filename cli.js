@@ -46,7 +46,7 @@ try {
 }
 
 const appInfo = plist.parse(infoPlist);
-const appName = appInfo.CFBundleName;
+const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
 // `const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
