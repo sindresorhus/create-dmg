@@ -70,7 +70,7 @@ if (cli.flags.overwrite) {
 
 const ee = appdmg({
 	target: dmgPath,
-	basepath: __dirname,
+	basepath: process.cwd(),
 	specification: {
 		title: appName,
 		// Disabled because of #16
