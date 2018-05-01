@@ -19,6 +19,7 @@ const cli = meow(`
 
 	Options
 	  --overwrite  Overwrite existing DMG with the same name
+	  --identity   Identity to use for signing DMG
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -27,6 +28,10 @@ const cli = meow(`
 	flags: {
 		overwrite: {
 			type: 'boolean'
+		},
+		identity: {
+			type: 'string',
+			default: 'Developer ID Application'
 		}
 	}
 });
@@ -114,7 +119,7 @@ ee.on('finish', async () => {
 	ora.text = 'Code signing DMG';
 
 	try {
-		await execa('codesign', ['--sign', 'Developer ID Application', dmgPath]);
+		await execa('codesign', ['--sign', cli.flags.identity, dmgPath]);
 		const {stderr} = await execa('codesign', [dmgPath, '--display', '--verbose=2']);
 
 		const match = /^Authority=(.*)$/m.exec(stderr);
