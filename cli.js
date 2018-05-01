@@ -114,7 +114,19 @@ ee.on('finish', async () => {
 	ora.text = 'Code signing DMG';
 
 	try {
-		await execa('codesign', ['--sign', 'Developer ID Application', dmgPath]);
+		let identity;
+		const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
+		if (stdout.includes('Developer ID Application:')) {
+			identity = 'Developer ID Application';
+		} else if (stdout.includes('Mac Developer:')) {
+			identity = 'Mac Developer';
+		} else {
+			const err = new Error();
+			err.stderr = 'No usable identity found';
+			throw err;
+		}
+
+		await execa('codesign', ['--sign', identity, dmgPath]);
 		const {stderr} = await execa('codesign', [dmgPath, '--display', '--verbose=2']);
 
 		const match = /^Authority=(.*)$/m.exec(stderr);
