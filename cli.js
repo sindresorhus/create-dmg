@@ -19,6 +19,7 @@ const cli = meow(`
 
 	Options
 	  --overwrite  Overwrite existing DMG with the same name
+	  --format     Set DMG format (default ULFO)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -27,6 +28,10 @@ const cli = meow(`
 	flags: {
 		overwrite: {
 			type: 'boolean'
+		},
+		format: {
+			type: 'string',
+			default: 'ULFO'
 		}
 	}
 });
@@ -80,7 +85,7 @@ const ee = appdmg({
 		// https://github.com/LinusU/node-appdmg/issues/135
 		background: path.join(__dirname, 'assets/dmg-background.png'),
 		'icon-size': 160,
-		format: 'ULFO',
+		format: cli.flags.format,
 		window: {
 			size: {
 				width: 660,

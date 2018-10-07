@@ -32,6 +32,7 @@ $ create-dmg --help
 
   Options
     --overwrite  Overwrite existing DMG with the same name
+    --format     Set DMG format (default ULFO)
 
   Examples
     $ create-dmg 'Lungo.app'
@@ -41,7 +42,7 @@ $ create-dmg --help
 
 ## DMG
 
-The DMG requires macOS 10.11 or later and has the filename `App Name 0.0.0.dmg`, for example `Lungo 1.0.0.dmg`.
+The DMG requires macOS 10.11 or later with the default `format` and has the filename `App Name 0.0.0.dmg`, for example `Lungo 1.0.0.dmg`.
 
 It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
 
