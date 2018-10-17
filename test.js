@@ -9,10 +9,10 @@ test('main', async t => {
 
 	try {
 		await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixture.app')], {cwd});
-	} catch (err) {
+	} catch (error) {
 		// Silence code signing failure
-		if (!/Code signing failed/.test(err.message)) {
-			throw err;
+		if (!/Code signing failed/.test(error.message)) {
+			throw error;
 		}
 	}
 

@@ -45,13 +45,13 @@ if (!destPath) {
 let infoPlist;
 try {
 	infoPlist = fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8');
-} catch (err) {
-	if (err.code === 'ENOENT') {
+} catch (error) {
+	if (error.code === 'ENOENT') {
 		console.error(`Could not find \`${path.relative(process.cwd(), appPath)}\``);
 		process.exit(1);
 	}
 
-	throw err;
+	throw error;
 }
 
 const appInfo = plist.parse(infoPlist);
@@ -137,8 +137,8 @@ ee.on('finish', async () => {
 
 		ora.info(`Code signing identity: ${match[1]}`).start();
 		ora.succeed('DMG created');
-	} catch (err) {
-		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${err.stderr.trim()}`);
+	} catch (error) {
+		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${error.stderr.trim()}`);
 		process.exit(1);
 	}
 });
