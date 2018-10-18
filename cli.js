@@ -139,7 +139,7 @@ ee.on('finish', async () => {
 		ora.succeed('DMG created');
 	} catch (error) {
 		ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${error.stderr.trim()}`);
-		process.exit(1);
+		process.exit(2);
 	}
 });
 
