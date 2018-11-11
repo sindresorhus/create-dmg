@@ -120,16 +120,12 @@ ee.on('finish', async () => {
 	try {
 		let identity;
 		const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
-		if (cli.flags.identity) {
-			if (stdout.includes('"' + cli.flags.identity + '"')) {
-				identity = cli.flags.identity;
-			}
-		} else {
-			if (stdout.includes('Developer ID Application:')) {
-				identity = 'Developer ID Application';
-			} else if (stdout.includes('Mac Developer:')) {
-				identity = 'Mac Developer';
-			}
+		if (cli.flags.identity && stdout.includes('"' + cli.flags.identity + '"')) {
+			identity = cli.flags.identity;
+		} else if (!cli.flags.identity && stdout.includes('Developer ID Application:')) {
+			identity = 'Developer ID Application';
+		} else if (!cli.flags.identity && stdout.includes('Mac Developer:')) {
+			identity = 'Mac Developer';
 		}
 
 		if (!identity) {
