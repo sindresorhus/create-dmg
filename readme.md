@@ -31,7 +31,8 @@ $ create-dmg --help
     $ create-dmg <app> [destination]
 
   Options
-    --overwrite  Overwrite existing DMG with the same name
+    --overwrite         Overwrite existing DMG with the same name
+    --identity <value>  Set code signing identity
 
   Examples
     $ create-dmg 'Lungo.app'

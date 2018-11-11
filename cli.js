@@ -18,7 +18,8 @@ const cli = meow(`
 	  $ create-dmg <app> [destination]
 
 	Options
-	  --overwrite  Overwrite existing DMG with the same name
+	  --overwrite         Overwrite existing DMG with the same name
+	  --identity <value>  Set code signing identity
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -27,6 +28,9 @@ const cli = meow(`
 	flags: {
 		overwrite: {
 			type: 'boolean'
+		},
+		identity: {
+			type: 'string'
 		}
 	}
 });
@@ -116,11 +120,19 @@ ee.on('finish', async () => {
 	try {
 		let identity;
 		const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
-		if (stdout.includes('Developer ID Application:')) {
-			identity = 'Developer ID Application';
-		} else if (stdout.includes('Mac Developer:')) {
-			identity = 'Mac Developer';
+		if (cli.flags.identity) {
+			if (stdout.includes('"' + cli.flags.identity + '"')) {
+				identity = cli.flags.identity;
+			}
 		} else {
+			if (stdout.includes('Developer ID Application:')) {
+				identity = 'Developer ID Application';
+			} else if (stdout.includes('Mac Developer:')) {
+				identity = 'Mac Developer';
+			}
+		}
+
+		if (!identity) {
 			const err = new Error();
 			err.stderr = 'No usable identity found';
 			throw err;
