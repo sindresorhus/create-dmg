@@ -19,7 +19,7 @@ const cli = meow(`
 
 	Options
 	  --overwrite         Overwrite existing DMG with the same name
-	  --identity <value>  Set code signing identity
+	  --identity=<value>  Set code signing identity (chosen automatically by default)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
