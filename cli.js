@@ -120,7 +120,7 @@ ee.on('finish', async () => {
 	try {
 		let identity;
 		const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
-		if (cli.flags.identity && stdout.includes('"' + cli.flags.identity + '"')) {
+		if (cli.flags.identity && stdout.includes(`"${cli.flags.identity}"`)) {
 			identity = cli.flags.identity;
 		} else if (!cli.flags.identity && stdout.includes('Developer ID Application:')) {
 			identity = 'Developer ID Application';
