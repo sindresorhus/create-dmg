@@ -32,7 +32,7 @@ $ create-dmg --help
 
   Options
     --overwrite         Overwrite existing DMG with the same name
-    --identity=<value>  Set code signing identity (chosen automatically by default)
+    --identity=<value>  Manually set code signing identity (automatic by default)
 
   Examples
     $ create-dmg 'Lungo.app'
