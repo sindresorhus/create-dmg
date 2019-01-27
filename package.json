@@ -38,13 +38,15 @@
 	"dependencies": {
 		"appdmg": "^0.5.2",
 		"execa": "^1.0.0",
+		"gm": "^1.23.1",
+		"icns-lib": "^1.0.1",
 		"meow": "^5.0.0",
 		"ora": "^3.0.0",
-		"plist": "^3.0.1"
+		"plist": "^3.0.1",
+		"tempy": "^0.2.1"
 	},
 	"devDependencies": {
 		"ava": "^0.25.0",
-		"tempy": "^0.2.1",
 		"xo": "^0.23.0"
 	}
 }
