@@ -18,7 +18,7 @@ You might also find my [`LaunchAtLogin`](https://github.com/sindresorhus/LaunchA
 Ensure you have [Node.js](https://nodejs.org) 8 or later installed. Then run the following:
 
 ```
-$ npm install --global create-dmg
+$ sudo npm install --unsafe-perm --global create-dmg
 ```
 
 
