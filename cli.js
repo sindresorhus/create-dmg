@@ -7,7 +7,7 @@ const appdmg = require('appdmg');
 const plist = require('plist');
 const Ora = require('ora');
 const execa = require('execa');
-const composeIcon = require('./icons');
+const composeIcon = require('./compose-icon');
 
 if (process.platform !== 'darwin') {
 	console.error('macOS only');
@@ -70,7 +70,7 @@ async function init() {
 		} catch (_) {}
 	}
 
-	ora.text = 'Composing mount icon';
+	ora.text = 'Creating icon';
 	const composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
 
 	const ee = appdmg({
@@ -78,7 +78,6 @@ async function init() {
 		basepath: process.cwd(),
 		specification: {
 			title: appName,
-			// Disabled because of #16
 			icon: composedIconPath,
 			//
 			// Use transparent background and `background-color` option when this is fixed:
