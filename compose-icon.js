@@ -30,7 +30,6 @@ async function composeIcon(type, appIcon, mountIcon, composedIcon) {
 	mountIcon = mountIcon.composite(tempAppIconPath).gravity('Center').geometry(`+0-${iconGravityFactor}`);
 
 	composedIcon[type] = await promisify(mountIcon.toBuffer.bind(mountIcon))();
-
 }
 
 const hasGm = async () => {

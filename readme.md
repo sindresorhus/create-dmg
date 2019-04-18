@@ -59,7 +59,8 @@ brew install graphicsmagick
 
 ### Icon Example
 
-<img style="text-align: center;" src="icon-example.png" width="300">
+<img src="icon-example-app.png" width="300">
+<img src="icon-example.png" width="300">
 
 ## License
 
