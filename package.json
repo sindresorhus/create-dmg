@@ -20,7 +20,8 @@
 	},
 	"files": [
 		"cli.js",
-		"assets"
+		"assets",
+		"disk-icon.icns"
 	],
 	"keywords": [
 		"cli-app",
