@@ -115,9 +115,11 @@ async function init() {
 	});
 
 	ee.on('finish', async () => {
-		ora.text = 'Code signing DMG';
-
 		try {
+			ora.text = 'Replacing DMG icon';
+			await execa('./seticon', [composedIconPath, dmgPath]);
+
+			ora.text = 'Code signing DMG';
 			let identity;
 			const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
 			if (stdout.includes('Developer ID Application:')) {

@@ -21,7 +21,8 @@
 	"files": [
 		"cli.js",
 		"assets",
-		"disk-icon.icns"
+		"disk-icon.icns",
+		"seticon"
 	],
 	"keywords": [
 		"cli-app",
