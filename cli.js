@@ -117,7 +117,8 @@ async function init() {
 	ee.on('finish', async () => {
 		try {
 			ora.text = 'Replacing DMG icon';
-			await execa('./seticon', [composedIconPath, dmgPath]);
+			// seticon is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
+			await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
 
 			ora.text = 'Code signing DMG';
 			let identity;
