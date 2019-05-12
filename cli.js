@@ -117,7 +117,7 @@ async function init() {
 	ee.on('finish', async () => {
 		try {
 			ora.text = 'Replacing DMG icon';
-			// Seticon is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
+			// `seticon`` is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
 			await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
 
 			ora.text = 'Code signing DMG';
@@ -128,9 +128,9 @@ async function init() {
 			} else if (stdout.includes('Mac Developer:')) {
 				identity = 'Mac Developer';
 			} else {
-				const err = new Error();
-				err.stderr = 'No usable identity found';
-				throw err;
+				const error = new Error();
+				error.stderr = 'No usable identity found';
+				throw error;
 			}
 
 			await execa('codesign', ['--sign', identity, dmgPath]);

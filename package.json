@@ -20,6 +20,7 @@
 	},
 	"files": [
 		"cli.js",
+		"compose-icon.js",
 		"assets",
 		"disk-icon.icns",
 		"seticon"
@@ -45,10 +46,10 @@
 		"meow": "^5.0.0",
 		"ora": "^3.0.0",
 		"plist": "^3.0.1",
-		"tempy": "^0.2.1"
+		"tempy": "^0.3.0"
 	},
 	"devDependencies": {
-		"ava": "^0.25.0",
-		"xo": "^0.23.0"
+		"ava": "^1.4.1",
+		"xo": "^0.24.0"
 	}
 }

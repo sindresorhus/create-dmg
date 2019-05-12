@@ -49,18 +49,20 @@ It will try to code sign the DMG, but the DMG is still created and fine even if 
 
 ### DMG Icon
 
-[GraphicsMagick](http://www.graphicsmagick.org/) is required to create the DMG icon based on the application icon and macOS mounted device icon.
+[GraphicsMagick](http://www.graphicsmagick.org) is required to create the custom DMG icon that's based on the app icon and the macOS mounted device icon.
 
-### Steps using Brew
-```bash
-brew install imagemagick
-brew install graphicsmagick
+#### Steps using Homebrew
+
+```
+$ brew install graphicsmagick imagemagick
 ```
 
-### Icon Example
+#### Icon Example
 
-<img src="icon-example-app.png" width="300">
-<img src="icon-example.png" width="300">
+Original icon → DMG icon
+
+<img src="icon-example-app.png" width="300"><img src="icon-example.png" width="300">
+
 
 ## License
 
