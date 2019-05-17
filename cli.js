@@ -125,6 +125,8 @@ async function init() {
 			const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
 			if (stdout.includes('Developer ID Application:')) {
 				identity = 'Developer ID Application';
+			} else if (stdout.includes('3rd Party Mac Developer Application:')) {
+				identity = '3rd Party Mac Developer Application';
 			} else if (stdout.includes('Mac Developer:')) {
 				identity = 'Mac Developer';
 			} else {
