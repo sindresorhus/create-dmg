@@ -39,7 +39,7 @@
 		"apple"
 	],
 	"dependencies": {
-		"appdmg": "^0.5.2",
+		"appdmg": "^0.6.0",
 		"execa": "^1.0.0",
 		"gm": "^1.23.1",
 		"icns-lib": "^1.0.1",
