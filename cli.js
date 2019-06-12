@@ -151,7 +151,7 @@ async function init() {
 	});
 
 	ee.on('error', error => {
-		ora.fail(error);
+		ora.fail(`Building the DMG failed. ${error}`);
 		process.exit(1);
 	});
 }
