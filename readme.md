@@ -48,6 +48,22 @@ It will try to code sign the DMG, but the DMG is still created and fine even if 
 
 <img src="screenshot-dmg.png" width="772">
 
+### DMG Icon
+
+[GraphicsMagick](http://www.graphicsmagick.org) is required to create the custom DMG icon that's based on the app icon and the macOS mounted device icon.
+
+#### Steps using Homebrew
+
+```
+$ brew install graphicsmagick imagemagick
+```
+
+#### Icon Example
+
+Original icon → DMG icon
+
+<img src="icon-example-app.png" width="300"><img src="icon-example.png" width="300">
+
 
 ## License
 
