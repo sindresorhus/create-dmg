@@ -134,11 +134,11 @@ async function init() {
 			} else if (!cli.flags.identity && stdout.includes('Mac Developer:')) {
 				identity = 'Mac Developer';
 			}
-	
+
 			if (!identity) {
 				const err = new Error();
 				err.stderr = 'No suitable code signing identity found';
-				throw err;	
+				throw err;
 			}
 
 			await execa('codesign', ['--sign', identity, dmgPath]);
