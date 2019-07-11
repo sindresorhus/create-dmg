@@ -19,7 +19,8 @@ const cli = meow(`
 	  $ create-dmg <app> [destination]
 
 	Options
-	  --overwrite  Overwrite existing DMG with the same name
+	  --overwrite         Overwrite existing DMG with the same name
+	  --identity=<value>  Manually set code signing identity (automatic by default)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -28,6 +29,9 @@ const cli = meow(`
 	flags: {
 		overwrite: {
 			type: 'boolean'
+		},
+		identity: {
+			type: 'string'
 		}
 	}
 });
@@ -123,13 +127,17 @@ async function init() {
 			ora.text = 'Code signing DMG';
 			let identity;
 			const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
-			if (stdout.includes('Developer ID Application:')) {
+			if (cli.flags.identity && stdout.includes(`"${cli.flags.identity}"`)) {
+				identity = cli.flags.identity;
+			} else if (!cli.flags.identity && stdout.includes('Developer ID Application:')) {
 				identity = 'Developer ID Application';
-			} else if (stdout.includes('Mac Developer:')) {
+			} else if (!cli.flags.identity && stdout.includes('Mac Developer:')) {
 				identity = 'Mac Developer';
-			} else {
+			}
+
+			if (!identity) {
 				const error = new Error();
-				error.stderr = 'No usable identity found';
+				error.stderr = 'No suitable code signing identity found';
 				throw error;
 			}
 
