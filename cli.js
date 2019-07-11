@@ -136,9 +136,9 @@ async function init() {
 			}
 
 			if (!identity) {
-				const err = new Error();
-				err.stderr = 'No suitable code signing identity found';
-				throw err;
+				const error = new Error();
+				error.stderr = 'No suitable code signing identity found';
+				throw error;
 			}
 
 			await execa('codesign', ['--sign', identity, dmgPath]);
