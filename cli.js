@@ -47,9 +47,11 @@ if (!destPath) {
 	destPath = process.cwd();
 }
 
+const infoPlistPath = path.join(appPath, 'Contents/Info.plist');
+
 let infoPlist;
 try {
-	infoPlist = fs.readFileSync(path.join(appPath, 'Contents/Info.plist'), 'utf8');
+	infoPlist = fs.readFileSync(infoPlistPath, 'utf8');
 } catch (error) {
 	if (error.code === 'ENOENT') {
 		console.error(`Could not find \`${path.relative(process.cwd(), appPath)}\``);
@@ -59,15 +61,22 @@ try {
 	throw error;
 }
 
-const appInfo = plist.parse(infoPlist);
-const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
-const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
-const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
-
 const ora = new Ora('Creating DMG');
 ora.start();
 
 async function init() {
+	let appInfo;
+	if (infoPlist[0] === '<') {
+		appInfo = plist.parse(infoPlist);
+	} else {
+		const {stdout} = await execa('plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
+		appInfo = plist.parse(stdout);
+	}
+
+	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
+	const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
+	const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
+
 	if (cli.flags.overwrite) {
 		try {
 			fs.unlinkSync(dmgPath);
