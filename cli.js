@@ -66,9 +66,9 @@ ora.start();
 
 async function init() {
 	let appInfo;
-	if (infoPlist[0] === '<') {
+	try {
 		appInfo = plist.parse(infoPlist);
-	} else {
+	} catch {
 		const {stdout} = await execa('plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
 		appInfo = plist.parse(stdout);
 	}
