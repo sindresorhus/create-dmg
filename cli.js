@@ -34,7 +34,7 @@ const cli = meow(`
 		identity: {
 			type: 'string'
 		},
-		"dmg-title": {
+		'dmg-title': {
 			type: 'string'
 		}
 	}
