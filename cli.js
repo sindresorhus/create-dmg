@@ -65,7 +65,7 @@ try {
 
 const appInfo = plist.parse(infoPlist);
 const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
-const dmgTitle = (appName.length > 27) ? (cli.flags['dmg-title'] || appName) : appName;
+const dmgTitle = appName.length > 27 ? (cli.flags['dmg-title'] || appName) : appName;
 const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
