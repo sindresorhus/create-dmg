@@ -19,8 +19,9 @@ const cli = meow(`
 	  $ create-dmg <app> [destination]
 
 	Options
-	  --overwrite         Overwrite existing DMG with the same name
-	  --identity=<value>  Manually set code signing identity (automatic by default)
+	  --overwrite          Overwrite existing DMG with the same name
+	  --identity=<value>   Manually set code signing identity (automatic by default)
+	  --dmg-title=<value>  Manually set title of DMG volume (only used if app name is >27 character limit)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -31,6 +32,9 @@ const cli = meow(`
 			type: 'boolean'
 		},
 		identity: {
+			type: 'string'
+		},
+		dmgTitle: {
 			type: 'string'
 		}
 	}
@@ -75,6 +79,7 @@ async function init() {
 
 	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
 	const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
+	const dmgTitle = appName.length > 27 ? (cli.flags['dmg-title'] || appName) : appName;
 	const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
 	if (cli.flags.overwrite) {
@@ -90,7 +95,7 @@ async function init() {
 		target: dmgPath,
 		basepath: process.cwd(),
 		specification: {
-			title: appName,
+			title: dmgTitle,
 			icon: composedIconPath,
 			//
 			// Use transparent background and `background-color` option when this is fixed:
