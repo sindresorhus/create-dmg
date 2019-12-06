@@ -33,6 +33,7 @@ $ create-dmg --help
   Options
     --overwrite         Overwrite existing DMG with the same name
     --identity=<value>  Manually set code signing identity (automatic by default)
+    --dmg-title=<value>  Manually set title of DMG volume (only used if app name is >27 character limit)
 
   Examples
     $ create-dmg 'Lungo.app'
@@ -63,8 +64,3 @@ $ brew install graphicsmagick imagemagick
 Original icon → DMG icon
 
 <img src="icon-example-app.png" width="300"><img src="icon-example.png" width="300">
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)

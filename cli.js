@@ -40,15 +40,15 @@ const cli = meow(`
 	}
 });
 
-let [appPath, destPath] = cli.input;
+let [appPath, destinationPath] = cli.input;
 
 if (!appPath) {
 	console.error('Specify an app');
 	process.exit(1);
 }
 
-if (!destPath) {
-	destPath = process.cwd();
+if (!destinationPath) {
+	destinationPath = process.cwd();
 }
 
 const infoPlistPath = path.join(appPath, 'Contents/Info.plist');
@@ -80,7 +80,7 @@ async function init() {
 	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
 	const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 	const dmgTitle = appName.length > 27 ? (cli.flags['dmg-title'] || appName) : appName;
-	const dmgPath = path.join(destPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
+	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
 	if (cli.flags.overwrite) {
 		try {

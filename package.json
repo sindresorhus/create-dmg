@@ -4,6 +4,7 @@
 	"description": "Create a good-looking DMG for your macOS app in seconds",
 	"license": "MIT",
 	"repository": "sindresorhus/create-dmg",
+	"funding": "https://github.com/sponsors/sindresorhus",
 	"author": {
 		"name": "Sindre Sorhus",
 		"email": "sindresorhus@gmail.com",
@@ -44,12 +45,12 @@
 		"gm": "^1.23.1",
 		"icns-lib": "^1.0.1",
 		"meow": "^5.0.0",
-		"ora": "^3.0.0",
+		"ora": "^4.0.3",
 		"plist": "^3.0.1",
 		"tempy": "^0.3.0"
 	},
 	"devDependencies": {
-		"ava": "^1.4.1",
-		"xo": "^0.24.0"
+		"ava": "^2.4.0",
+		"xo": "^0.25.3"
 	}
 }
