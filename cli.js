@@ -68,7 +68,7 @@ async function init() {
 	let appInfo;
 	try {
 		appInfo = plist.parse(infoPlist);
-	} catch {
+	} catch (_) {
 		const {stdout} = await execa('plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
 		appInfo = plist.parse(stdout);
 	}
