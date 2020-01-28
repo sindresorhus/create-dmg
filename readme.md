@@ -43,7 +43,7 @@ $ create-dmg --help
 
 ## DMG
 
-The DMG detects the minimum runtime of the app, and uses ULZO (macOS 10.11 or later) or UDZO as appropriate. The resulting image has the filename `App Name 0.0.0.dmg`, for example `Lungo 1.0.0.dmg`.
+The DMG detects the minimum runtime of the app, and uses ULFO (macOS 10.11 or later) or UDZO as appropriate. The resulting image has the filename `App Name 0.0.0.dmg`, for example `Lungo 1.0.0.dmg`.
 
 It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
 
