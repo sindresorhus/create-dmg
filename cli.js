@@ -101,7 +101,7 @@ async function init() {
 	ora.text = 'Checking minimum runtime';
 	const {stdout: minSystemVersion} = await execa('/usr/libexec/PlistBuddy', ['-c', 'Print :LSMinimumSystemVersion', infoPlistPath]);
 	const minorVersion = Number(minSystemVersion.replace('10.', '')) || 0;
-	dmgFormat = (minorVersion >= 11) ? 'ULZO' : 'UDZO'; // ULZO requires 10.11+
+	dmgFormat = (minorVersion >= 11) ? 'ULFO' : 'UDZO'; // ULFO requires 10.11+
 	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format`).start();
 
 	const ee = appdmg({
