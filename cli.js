@@ -65,6 +65,7 @@ try {
 	throw error;
 }
 
+let dmgFormat;
 const ora = new Ora('Creating DMG');
 ora.start();
 
@@ -91,6 +92,12 @@ async function init() {
 	ora.text = 'Creating icon';
 	const composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
 
+	ora.text = 'Checking minimum runtime';
+	const {stdout: minSystemVersion} = await execa('/usr/libexec/PlistBuddy', ['-c', 'Print :LSMinimumSystemVersion', infoPlistPath]);
+	const minorVersion = Number(minSystemVersion.replace('10.', '')) || 0;
+	dmgFormat = (minorVersion >= 11) ? 'ULZO' : 'UDZO'; // ULZO requires 10.11+
+	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format`).start();
+
 	const ee = appdmg({
 		target: dmgPath,
 		basepath: process.cwd(),
@@ -102,7 +109,7 @@ async function init() {
 			// https://github.com/LinusU/node-appdmg/issues/135
 			background: path.join(__dirname, 'assets/dmg-background.png'),
 			'icon-size': 160,
-			format: 'ULFO',
+			format: dmgFormat,
 			window: {
 				size: {
 					width: 660,
