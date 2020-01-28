@@ -174,7 +174,7 @@ async function init() {
 			ora.info(`Code signing identity: ${match[1]}`).start();
 			ora.succeed('DMG created');
 		} catch (error) {
-			ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${error.stderr.trim()}`);
+			ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${error.hasOwnProperty('stderr') ? error.stderr.trim() : error}`);
 			process.exit(2);
 		}
 	});
