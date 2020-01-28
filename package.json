@@ -24,7 +24,8 @@
 		"compose-icon.js",
 		"assets",
 		"disk-icon.icns",
-		"seticon"
+		"seticon",
+		"base.r"
 	],
 	"keywords": [
 		"cli-app",
