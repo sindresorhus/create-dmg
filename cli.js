@@ -73,7 +73,7 @@ async function init() {
 	try {
 		appInfo = plist.parse(infoPlist);
 	} catch (_) {
-		const {stdout} = await execa('plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
+		const {stdout} = await execa('/usr/bin/plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
 		appInfo = plist.parse(stdout);
 	}
 
@@ -140,7 +140,7 @@ async function init() {
 
 			ora.text = 'Code signing DMG';
 			let identity;
-			const {stdout} = await execa('security', ['find-identity', '-v', '-p', 'codesigning']);
+			const {stdout} = await execa('/usr/bin/security', ['find-identity', '-v', '-p', 'codesigning']);
 			if (cli.flags.identity && stdout.includes(`"${cli.flags.identity}"`)) {
 				identity = cli.flags.identity;
 			} else if (!cli.flags.identity && stdout.includes('Developer ID Application:')) {
@@ -155,8 +155,8 @@ async function init() {
 				throw error;
 			}
 
-			await execa('codesign', ['--sign', identity, dmgPath]);
-			const {stderr} = await execa('codesign', [dmgPath, '--display', '--verbose=2']);
+			await execa('/usr/bin/codesign', ['--sign', identity, dmgPath]);
+			const {stderr} = await execa('/usr/bin/codesign', [dmgPath, '--display', '--verbose=2']);
 
 			const match = /^Authority=(.*)$/m.exec(stderr);
 			if (!match) {
