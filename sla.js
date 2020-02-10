@@ -59,41 +59,52 @@ module.exports = async (dmgPath, dmgFormat) => {
 	const hasRtf = fs.existsSync(rtfSlaFile);
 	const hasTxt = fs.existsSync(txtSlaFile);
 
-	if (hasRaw || hasRtf || hasTxt) {
-		const tempDmgPath = tempy.file({extension: 'dmg'});
-		// UDCO or UDRO format is required for SLA
-		await execa('/usr/bin/hdiutil', ['convert', '-format', 'UDCO', dmgPath, '-o', tempDmgPath]);
-		await execa('/usr/bin/hdiutil', ['unflatten', tempDmgPath]);
+	if (!hasRaw && !hasRtf && !hasTxt) {
+		return;
+	}
 
-		if (hasRaw) {
-			await execa('/usr/bin/rez', ['-a', rawSlaFile, '-o', tempDmgPath]);
+	const tempDmgPath = tempy.file({extension: 'dmg'});
+
+	// UDCO or UDRO format is required to be able to unflatten
+	// Convert and unflatten DMG (original format will be restored at the end)
+	await execa('/usr/bin/hdiutil', ['convert', '-format', 'UDCO', dmgPath, '-o', tempDmgPath]);
+	await execa('/usr/bin/hdiutil', ['unflatten', tempDmgPath]);
+
+	if (hasRaw) {
+		// If user-defined sla.r file exists, add it to dmg with 'rez' utility
+		await execa('/usr/bin/rez', ['-a', rawSlaFile, '-o', tempDmgPath]);
+	} else {
+		// Generate sla.r file from text/rtf file
+		// Use base.r file as a starting point
+		let data = fs.readFileSync(path.join(__dirname, 'base.r'), 'utf8');
+		let plainText = '';
+
+		// Generate RTF version and preserve plain text
+		data += '\ndata \'RTF \' (5000, "English") {\n';
+
+		if (hasRtf) {
+			data += serializeString((fs.readFileSync(rtfSlaFile).toString('hex').toUpperCase()));
+			({stdout: plainText} = await execa('/usr/bin/textutil', ['-convert', 'txt', '-stdout', rtfSlaFile]));
 		} else {
-			let data = fs.readFileSync(path.join(__dirname, 'base.r'), 'utf8');
-			let plainText = '';
-
-			data += '\ndata \'RTF \' (5000, "English") {\n';
-
-			if (hasRtf) {
-				data += serializeString((fs.readFileSync(rtfSlaFile).toString('hex').toUpperCase()));
-				({stdout: plainText} = await execa('/usr/bin/textutil', ['-convert', 'txt', '-stdout', rtfSlaFile]));
-			} else {
-				plainText = fs.readFileSync(txtSlaFile, 'utf8');
-				data += wrapInRtf(plainText);
-			}
-
-			data += '\n};\n';
-
-			data += '\ndata \'TEXT\' (5000, "English") {\n';
-			data += serializeString(Buffer.from(plainText, 'utf8').toString('hex').toUpperCase());
-			data += '\n};\n';
-
-			const tempSlaFile = tempy.file({extension: 'r'});
-
-			fs.writeFileSync(tempSlaFile, data, 'utf8');
-			await execa('/usr/bin/rez', ['-a', tempSlaFile, '-o', tempDmgPath]);
+			plainText = fs.readFileSync(txtSlaFile, 'utf8');
+			data += wrapInRtf(plainText);
 		}
 
-		await execa('/usr/bin/hdiutil', ['flatten', tempDmgPath]);
-		await execa('/usr/bin/hdiutil', ['convert', '-format', dmgFormat, tempDmgPath, '-o', dmgPath, '-ov']);
+		data += '\n};\n';
+
+		// Generate plain text version
+		// Used as an alternate for command-line deployments
+		data += '\ndata \'TEXT\' (5000, "English") {\n';
+		data += serializeString(Buffer.from(plainText, 'utf8').toString('hex').toUpperCase());
+		data += '\n};\n';
+
+		// Save sla.r file, add it to dmg with 'rez' utility
+		const tempSlaFile = tempy.file({extension: 'r'});
+		fs.writeFileSync(tempSlaFile, data, 'utf8');
+		await execa('/usr/bin/rez', ['-a', tempSlaFile, '-o', tempDmgPath]);
 	}
+
+	// Flatten and convert back to original dmgFormat
+	await execa('/usr/bin/hdiutil', ['flatten', tempDmgPath]);
+	await execa('/usr/bin/hdiutil', ['convert', '-format', dmgFormat, tempDmgPath, '-o', dmgPath, '-ov']);
 };
