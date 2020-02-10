@@ -51,15 +51,15 @@ It will try to code sign the DMG, but the DMG is still created and fine even if 
 
 ### Software license
 
-If `license.txt`, `license.rtf`, or `sla.r` (raw SLAResources file) are present in the same folder as the app, they will be added as a software agreement when opening the image. The image will not be mounted unless the user indicates agreement with the license.
+If `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](https://download.developer.apple.com/Developer_Tools/software_licensing_for_udif/slas_for_udifs_1.0.dmg)) are present in the same folder as the app, they will be added as a software agreement when opening the image. The image will not be mounted unless the user indicates agreement with the license.
 
-`/usr/bin/rez` (Xcode Developer Tools) must be installed.
+`/usr/bin/rez` [Command Line Tools for Xcode](https://developer.apple.com/download/more/) must be installed.
 
 ### DMG Icon
 
 [GraphicsMagick](http://www.graphicsmagick.org) is required to create the custom DMG icon that's based on the app icon and the macOS mounted device icon.
 
-#### Steps using Homebrew
+#### Steps using [Homebrew](https://brew.sh/)
 
 ```
 $ brew install graphicsmagick imagemagick
