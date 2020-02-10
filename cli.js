@@ -92,9 +92,8 @@ async function init() {
 	ora.text = 'Creating icon';
 	const composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
 
-	ora.text = 'Checking minimum runtime';
-	const {stdout: minSystemVersion} = await execa('/usr/libexec/PlistBuddy', ['-c', 'Print :LSMinimumSystemVersion', infoPlistPath]);
-	const minorVersion = Number(minSystemVersion.replace('10.', '')) || 0;
+	const minSystemVersion = (Object.prototype.hasOwnProperty.call(appInfo, 'LSMinimumSystemVersion') && appInfo.LSMinimumSystemVersion.length > 0) ? appInfo.LSMinimumSystemVersion.toString() : '10.11';
+	const minorVersion = Number(minSystemVersion.split('.')[1]) || 0;
 	const dmgFormat = (minorVersion >= 11) ? 'ULFO' : 'UDZO'; // ULFO requires 10.11+
 	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format`).start();
 
