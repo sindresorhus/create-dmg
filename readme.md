@@ -6,12 +6,7 @@ Imagine you have finished a macOS app, exported it from Xcode, and now want to d
 
 <img src="screenshot-cli.gif" width="998">
 
-Discuss it on [Product Hunt](https://www.producthunt.com/posts/create-dmg) and [Twitter](https://twitter.com/sindresorhus/status/846416556754010112).
-
 *This tool is intentionally opinionated and simple. I'm not interested in adding lots of options.*
-
-You might also find my [`LaunchAtLogin`](https://github.com/sindresorhus/LaunchAtLogin) project useful.
-
 
 ## Install
 
@@ -20,7 +15,6 @@ Ensure you have [Node.js](https://nodejs.org) 8 or later installed. Then run the
 ```
 $ npm install --global create-dmg
 ```
-
 
 ## Usage
 
@@ -31,15 +25,14 @@ $ create-dmg --help
     $ create-dmg <app> [destination]
 
   Options
-    --overwrite         Overwrite existing DMG with the same name
-    --identity=<value>  Manually set code signing identity (automatic by default)
+    --overwrite          Overwrite existing DMG with the same name
+    --identity=<value>   Manually set code signing identity (automatic by default)
     --dmg-title=<value>  Manually set title of DMG volume (only used if app name is >27 character limit)
 
   Examples
     $ create-dmg 'Lungo.app'
     $ create-dmg 'Lungo.app' Build/Releases
 ```
-
 
 ## DMG
 
@@ -49,13 +42,13 @@ It will try to code sign the DMG, but the DMG is still created and fine even if 
 
 <img src="screenshot-dmg.png" width="772">
 
-### Software license
+### Software license agreement
 
-If `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](https://download.developer.apple.com/Developer_Tools/software_licensing_for_udif/slas_for_udifs_1.0.dmg)) are present in the same folder as the app, they will be added as a software agreement when opening the image. The image will not be mounted unless the user indicates agreement with the license.
+If either `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](https://download.developer.apple.com/Developer_Tools/software_licensing_for_udif/slas_for_udifs_1.0.dmg)) are present in the same directory as the app, it will be added as a software agreement when opening the image. The image will not be mounted unless the user indicates agreement with the license.
 
-`/usr/bin/rez` [Command Line Tools for Xcode](https://developer.apple.com/download/more/) must be installed.
+`/usr/bin/rez` (from [Command Line Tools for Xcode](https://developer.apple.com/download/more/)) must be installed.
 
-### DMG Icon
+### DMG icon
 
 [GraphicsMagick](http://www.graphicsmagick.org) is required to create the custom DMG icon that's based on the app icon and the macOS mounted device icon.
 
@@ -65,8 +58,19 @@ If `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](https://dow
 $ brew install graphicsmagick imagemagick
 ```
 
-#### Icon Example
+#### Icon example
 
 Original icon → DMG icon
 
 <img src="icon-example-app.png" width="300"><img src="icon-example.png" width="300">
+
+## Links
+
+- [Product Hunt post](https://www.producthunt.com/posts/create-dmg)
+
+## Related
+
+- [Defaults](https://github.com/sindresorhus/Defaults) - Swifty and modern UserDefaults
+- [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin) - Add “Launch at Login” functionality to your macOS
+- [Preferences](https://github.com/sindresorhus/Preferences) - Add a preferences window to your macOS app
+- [More…](https://github.com/search?q=user%3Asindresorhus+language%3Aswift)
