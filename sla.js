@@ -3,10 +3,6 @@ const path = require('path');
 const execa = require('execa');
 const tempy = require('tempy');
 
-//
-// Adapted from:
-// https://github.com/electron-userland/electron-builder/tree/master/packages/dmg-builder/src
-
 function getRtfUnicodeEscapedString(text) {
 	let result = '';
 	for (let i = 0; i < text.length; i++) {
@@ -46,7 +42,7 @@ function wrapInRtf(text) {
 }
 
 function serializeString(text) {
-	return '\t$"' + text.match(/.{1,32}/g).map(it => it.match(/.{1,4}/g).join(' ')).join('"\n\t$"') + '"';
+	return '\t$"' + text.match(/.{1,32}/g).map(x => x.match(/.{1,4}/g).join(' ')).join('"\n\t$"') + '"';
 }
 
 module.exports = async (dmgPath, dmgFormat) => {
@@ -98,7 +94,7 @@ module.exports = async (dmgPath, dmgFormat) => {
 		data += serializeString(Buffer.from(plainText, 'utf8').toString('hex').toUpperCase());
 		data += '\n};\n';
 
-		// Save sla.r file, add it to dmg with 'rez' utility
+		// Save sla.r file, add it to DMG with `rez` utility
 		const tempSlaFile = tempy.file({extension: 'r'});
 		fs.writeFileSync(tempSlaFile, data, 'utf8');
 		await execa('/usr/bin/rez', ['-a', tempSlaFile, '-o', tempDmgPath]);
