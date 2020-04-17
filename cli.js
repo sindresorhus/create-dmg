@@ -162,6 +162,7 @@ async function init() {
 					} else if (
 						[ 'Developer ID Application:',
 						  'Mac Developer:',
+						  'Apple Development:',
 						].some(str => identity.startsWith(str))
 					) {
 						return true
