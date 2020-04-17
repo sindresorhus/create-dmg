@@ -22,7 +22,7 @@ const cli = meow(`
 	Options
 	  --overwrite          Overwrite existing DMG with the same name
 	  --identity=<value>   Manually set code signing identity (automatic by default)
-	  --dmg-title=<value>  Manually set title of DMG volume
+	  --dmg-title=<value>  Manually set title of DMG volume (must be less than 27 characters)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -82,6 +82,11 @@ async function init() {
 	const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 	const dmgTitle = cli.flags.dmgTitle || appName;
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
+
+	if (dmgTitle.length > 27) {
+		console.error('Disk image title exceeds 27 characters, aborting');
+		process.exit(1);
+	}
 
 	if (cli.flags.overwrite) {
 		try {
