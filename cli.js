@@ -148,15 +148,26 @@ async function init() {
 			await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
 
 			ora.text = 'Code signing DMG';
-			let identity;
 			const {stdout} = await execa('/usr/bin/security', ['find-identity', '-v', '-p', 'codesigning']);
-			if (cli.flags.identity && stdout.includes(cli.flags.identity)) {
-				identity = cli.flags.identity;
-			} else if (!cli.flags.identity && stdout.includes('Developer ID Application:')) {
-				identity = 'Developer ID Application';
-			} else if (!cli.flags.identity && stdout.includes('Mac Developer:')) {
-				identity = 'Mac Developer';
-			}
+
+			let identity;
+			stdout.split(/\r?\n/).find(line => {
+				const match = /^  \d+\) \S+ "([^"]+)"/.exec(line)
+				if (match) {
+					identity = match[1]
+					if (cli.flags.identity) {
+						if (identity.includes(cli.flags.identity)) {
+							return true
+						}
+					} else if (
+						[ 'Developer ID Application:',
+						  'Mac Developer:',
+						].some(str => identity.startsWith(str))
+					) {
+						return true
+					}
+				}
+			})
 
 			if (!identity) {
 				const error = new Error();
