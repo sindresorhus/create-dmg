@@ -79,7 +79,6 @@ async function init() {
 	}
 
 	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
-	const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
 	const dmgTitle = appName.length > 27 ? (cli.flags.dmgTitle || appName) : appName;
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
@@ -89,8 +88,13 @@ async function init() {
 		} catch (_) {}
 	}
 
-	ora.text = 'Creating icon';
-	const composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
+	const hasAppIcon = appInfo.CFBundleIconFile;
+	let composedIconPath;
+	if (hasAppIcon) {
+		ora.text = 'Creating icon';
+		const appIconName = appInfo.CFBundleIconFile.replace(/\.icns/, '');
+		composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
+	}
 
 	const minSystemVersion = (Object.prototype.hasOwnProperty.call(appInfo, 'LSMinimumSystemVersion') && appInfo.LSMinimumSystemVersion.length > 0) ? appInfo.LSMinimumSystemVersion.toString() : '10.11';
 	const minorVersion = Number(minSystemVersion.split('.')[1]) || 0;
@@ -143,9 +147,11 @@ async function init() {
 			ora.text = 'Adding Software License Agreement if needed';
 			await addLicenseAgreementIfNeeded(dmgPath, dmgFormat);
 
-			ora.text = 'Replacing DMG icon';
-			// `seticon`` is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
-			await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
+			if (hasAppIcon) {
+				ora.text = 'Replacing DMG icon';
+				// `seticon`` is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
+				await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
+			}
 
 			ora.text = 'Code signing DMG';
 			let identity;
