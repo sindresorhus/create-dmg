@@ -188,6 +188,6 @@ async function init() {
 }
 
 init().catch(error => {
-	ora.fail(error);
+	ora.fail((error && error.stack) || error);
 	process.exit(1);
 });
