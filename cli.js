@@ -82,7 +82,7 @@ async function init() {
 	const dmgTitle = cli.flags.dmgTitle || appName;
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
-	if (dmgTitle.length > 27) {
+	if (cli.flags.dmgTitle > 27) {
 		console.error('Disk image title exceeds 27 characters, aborting');
 		process.exit(1);
 	}
