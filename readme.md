@@ -1,4 +1,4 @@
-# create-dmg [![Build Status](https://travis-ci.org/sindresorhus/create-dmg.svg?branch=master)](https://travis-ci.org/sindresorhus/create-dmg)
+# create-dmg [![Build Status](https://travis-ci.com/sindresorhus/create-dmg.svg?branch=master)](https://travis-ci.com/sindresorhus/create-dmg)
 
 > Create a good-looking [DMG](https://en.wikipedia.org/wiki/Apple_Disk_Image) for your macOS app in seconds
 

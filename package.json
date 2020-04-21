@@ -1,6 +1,6 @@
 {
 	"name": "create-dmg",
-	"version": "5.0.0",
+	"version": "5.0.1",
 	"description": "Create a good-looking DMG for your macOS app in seconds",
 	"license": "MIT",
 	"repository": "sindresorhus/create-dmg",
@@ -8,7 +8,7 @@
 	"author": {
 		"name": "Sindre Sorhus",
 		"email": "sindresorhus@gmail.com",
-		"url": "sindresorhus.com"
+		"url": "https://sindresorhus.com"
 	},
 	"bin": {
 		"create-dmg": "cli.js"
