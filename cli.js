@@ -83,7 +83,7 @@ async function init() {
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
 	if (cli.flags.dmgTitle > 27) {
-		console.error('Disk image title exceeds 27 characters, aborting');
+		ora.fail('Disk image title exceeds 27 characters, aborting. For more information, see https://github.com/sindresorhus/create-dmg/pull/40');
 		process.exit(1);
 	}
 
