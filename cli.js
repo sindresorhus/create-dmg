@@ -22,7 +22,7 @@ const cli = meow(`
 	Options
 	  --overwrite          Overwrite existing DMG with the same name
 	  --identity=<value>   Manually set code signing identity (automatic by default)
-	  --dmg-title=<value>  Manually set title of DMG volume (must be less than 27 characters)
+	  --dmg-title=<value>  Manually set title of DMG volume (automatically defaults to app name, must be <28 characters)
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -83,7 +83,7 @@ async function init() {
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
 	if (cli.flags.dmgTitle > 27) {
-		ora.fail('Disk image title exceeds 27 characters, aborting. For more information, see https://github.com/sindresorhus/create-dmg/pull/40');
+		ora.fail('The disk image title cannot exceed 27 characters. This is a limitation in a dependency: https://github.com/LinusU/node-alias/issues/7');
 		process.exit(1);
 	}
 
