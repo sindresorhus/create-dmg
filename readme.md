@@ -27,7 +27,7 @@ $ create-dmg --help
   Options
     --overwrite          Overwrite existing DMG with the same name
     --identity=<value>   Manually set code signing identity (automatic by default)
-    --dmg-title=<value>  Manually set title of DMG volume (only used if app name is >27 character limit)
+    --dmg-title=<value>  Manually set DMG title (must be <=27 characters) [default: App name]
 
   Examples
     $ create-dmg 'Lungo.app'
