@@ -22,7 +22,7 @@ const cli = meow(`
 	Options
 	  --overwrite          Overwrite existing DMG with the same name
 	  --identity=<value>   Manually set code signing identity (automatic by default)
-	  --dmg-title=<value>  Manually set title of DMG volume (automatically defaults to app name, must be <28 characters)
+	  --dmg-title=<value>  Manually set DMG title (must be <=27 characters) [default: App name]
 
 	Examples
 	  $ create-dmg 'Lungo.app'
