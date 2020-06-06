@@ -79,6 +79,10 @@ async function init() {
 	}
 
 	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
+	if (!appName) {
+		throw new Error('The app must have `CFBundleDisplayName` or `CFBundleName` defined in its `Info.plist`.');
+	}
+
 	const dmgTitle = cli.flags.dmgTitle || appName;
 	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
 
