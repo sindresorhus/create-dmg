@@ -40,6 +40,8 @@ The DMG detects the minimum runtime of the app, and uses ULFO (macOS 10.11 or la
 
 It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
 
+**Important:** Don't forget to [notarize your DMG](https://stackoverflow.com/a/60800864/64949).
+
 <img src="screenshot-dmg.png" width="772">
 
 ### Software license agreement
