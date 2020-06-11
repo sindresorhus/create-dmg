@@ -84,7 +84,8 @@ async function init() {
 	}
 
 	const dmgTitle = cli.flags.dmgTitle || appName;
-	const dmgPath = path.join(destinationPath, `${appName} ${appInfo.CFBundleShortVersionString}.dmg`);
+	const dmgFilename = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
+	const dmgPath = path.join(destinationPath, dmgFilename);
 
 	if (dmgTitle > 27) {
 		ora.fail('The disk image title cannot exceed 27 characters. This is a limitation in a dependency: https://github.com/LinusU/node-alias/issues/7');
@@ -189,7 +190,7 @@ async function init() {
 			}
 
 			ora.info(`Code signing identity: ${match[1]}`).start();
-			ora.succeed('DMG created');
+			ora.succeed(`Created “${dmgFilename}”`);
 		} catch (error) {
 			ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${Object.prototype.hasOwnProperty.call(error, 'stderr') ? error.stderr.trim() : error}`);
 			process.exit(2);
