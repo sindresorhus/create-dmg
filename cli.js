@@ -23,6 +23,7 @@ const cli = meow(`
 	  --overwrite          Overwrite existing DMG with the same name
 	  --identity=<value>   Manually set code signing identity (automatic by default)
 	  --dmg-title=<value>  Manually set DMG title (must be <=27 characters) [default: App name]
+	  --background=<value>  Manually set background image (660x400) [.png]
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -36,6 +37,9 @@ const cli = meow(`
 			type: 'string'
 		},
 		dmgTitle: {
+			type: 'string'
+		},
+		background: {
 			type: 'string'
 		}
 	}
@@ -86,6 +90,7 @@ async function init() {
 	const dmgTitle = cli.flags.dmgTitle || appName;
 	const dmgFilename = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
 	const dmgPath = path.join(destinationPath, dmgFilename);
+	const backgroundImagePath = cli.flags.background || path.join(__dirname, 'assets/dmg-background.png');
 
 	if (dmgTitle > 27) {
 		ora.fail('The disk image title cannot exceed 27 characters. This is a limitation in a dependency: https://github.com/LinusU/node-alias/issues/7');
@@ -120,7 +125,7 @@ async function init() {
 			//
 			// Use transparent background and `background-color` option when this is fixed:
 			// https://github.com/LinusU/node-appdmg/issues/135
-			background: path.join(__dirname, 'assets/dmg-background.png'),
+			background: backgroundImagePath,
 			'icon-size': 160,
 			format: dmgFormat,
 			window: {
