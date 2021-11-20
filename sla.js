@@ -61,10 +61,13 @@ module.exports = async (dmgPath, dmgFormat) => {
 
 	const tempDmgPath = tempy.file({extension: 'dmg'});
 
+	const diskImagesFramework = '/System/Library/PrivateFrameworks/DiskImages.framework/Versions/A/DiskImages';
+	const hdiutil = fs.existsSync(diskImagesFramework) ? '/usr/bin/hdiutil' : path.join(__dirname, 'hdiutil', 'hdiutil');
+
 	// UDCO or UDRO format is required to be able to unflatten
 	// Convert and unflatten DMG (original format will be restored at the end)
-	await execa('/usr/bin/hdiutil', ['convert', '-format', 'UDCO', dmgPath, '-o', tempDmgPath]);
-	await execa('/usr/bin/hdiutil', ['unflatten', tempDmgPath]);
+	await execa(hdiutil, ['convert', '-format', 'UDCO', dmgPath, '-o', tempDmgPath]);
+	await execa(hdiutil, ['unflatten', tempDmgPath]);
 
 	if (hasRaw) {
 		// If user-defined sla.r file exists, add it to dmg with 'rez' utility
@@ -101,6 +104,6 @@ module.exports = async (dmgPath, dmgFormat) => {
 	}
 
 	// Flatten and convert back to original dmgFormat
-	await execa('/usr/bin/hdiutil', ['flatten', tempDmgPath]);
-	await execa('/usr/bin/hdiutil', ['convert', '-format', dmgFormat, tempDmgPath, '-o', dmgPath, '-ov']);
+	await execa(hdiutil, ['flatten', tempDmgPath]);
+	await execa(hdiutil, ['convert', '-format', dmgFormat, tempDmgPath, '-o', dmgPath, '-ov']);
 };

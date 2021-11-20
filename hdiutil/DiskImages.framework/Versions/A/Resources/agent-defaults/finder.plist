@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>mount-point</key>
+	<string>/Volumes/</string>
+	<key>mount-type</key>
+	<string>in</string>
+	
+	<key>auto-fsck-failure-override-type</key>
+	<string>ui-agent</string>
+	
+	<key>auto-open-ro-root</key>
+	<true/>
+	<key>auto-open-rw-root</key>
+	<true/>
+</dict>
+</plist>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<!-- use plutil after hand editing (framework-base will catch you otherwise) -->
+<!-- mounting options -->	
+	<key>mount-required</key>
+	<true/>
+	<key>mount-attempted</key>
+	<true/>
+	<key>mount-private</key>
+	<false/>
+	<key>mount-point</key>
+	<string>/Volumes/</string>
+	<key>mount-type</key>
+	<string>in</string>
+	<key>enable-owners</key>
+	<false/>
+	<key>disable-owners</key>
+	<false/>
+	<key>skip-sla</key>
+	<false/>
+	<key>disable-kernel-mounting</key>
+	<true/>						<!-- this means actually we just PREFER non-kernel mounting -->
+	<key>idle-timeout</key>		<!-- how long before out-of-kernel images get an idle message so that they do housekeeping chores -->
+	<integer>15</integer>
+
+<!-- ui-agent suppression -->
+	<key>suppress-uiagent</key>
+	<false/>
+	<key>callback-with-sla</key>
+	<false/>
+
+<!-- mounting pre-processing options -->
+	<key>skip-verify</key>
+	<false/>
+	<key>skip-verify-remote</key>
+	<true/>
+	<key>skip-verify-locked</key>
+	<false/>
+	<key>skip-previously-verified</key>
+	<true/>
+	<key>ignore-bad-checksums</key>
+	<false/>
+
+<!-- autofscking -->
+<!--
+	In late Tiger and Leopard, images containing HFS, UFS, or MSDOS
+	filesystems were fsck'd before mount.  A one-shot extended
+	attribute was used to prevent images which passed fsck once from
+	being fsck'd multiple times if the mod date hadn't changed and
+	if you had write access to the image.
+
+	Because fsck had to succeed in order for the attribute to be
+	written, many older read-only images returned errors on every
+	open.  The mod times for read/write images were constantly changing
+	so many of those images paid a performance penalty (exceptions
+	were made for FileVault and iDisk mirrors b/c they were "system
+	images.")  The fsck attribute was also limited by a bug in Leopard
+	which prevented it from being written unless your home directory
+	had used the feature on Tiger.  Finally, due to the demise of
+	safari-gatekeeper (which gave way to the quarantine mechanism),
+	Leopard GM did *not* fsck images downloaded from Safari.  In
+	10.5.7, we finally forced all images mounted by Safari to be fsck'd.
+
+	In SnowLeopard, the presence of quaratine information correctly
+	causes images to be fsck'd.  Also, the extended attribute mechanism
+	(which always included local key material to prevent spoofing)
+	was fixed so that quarantined images that pass fsck will only be
+	fsck'd once per download.
+
+	As mentioned above, "system-images" are independently exempted from
+	this default behavior (filevault, idisk mirrors, etc)
+
+	If fsck fails, the mount will fail unless
+	auto-fsck-failure-override-type is callback, ui-agent, or
+	cfusernotification and the user confirms via the specified method
+	that the filesystem should still be mounted.
+
+-->
+	<!-- if system-image, skip auto-fsck -->
+	<key>skip-auto-fsck-for-system-images</key>
+	<true/>
+	<key>auto-fsck-failure-override-type</key>
+	<string>not-allowed</string>
+<!--	
+	We don't define auto-fsck here because the presence of this key 
+	will force auto-fsck to always occur or to never occur.  By leaving 
+	out this key, the normal logic (quarantine, EA, system-image, etc) 
+	will determine whether to fsck or not.
+
+	<key>auto-fsck</key>
+	<true/>
+-->
+
+<!-- mounting post-processing options -->	
+	<!-- most agent-defaults set auto-open-ro-root to false.  The default
+		 random clients to get their image volumes to show up in Finder.
+		 It's unclear whether that's desirable behavior. DI-338+ sets both
+		 of these to false iff no-browse is true. -->
+	<key>auto-open-ro-root</key>
+	<true/>
+	<key>auto-open-rw-root</key>
+	<false/>
+
+<!-- encryption related options -->	
+	<key>use-keychain</key>
+	<true/>
+	<key>disable-encrypted-images</key>
+	<false/>
+
+<!-- burning related options -->	
+	<key>burn-no-underrun-protection</key>
+	<false/>
+	<key>burn-synthesize-content</key>
+	<true/>
+
+<!-- threading options -->
+	<key>pthread-reader-cap</key>
+	<integer>4</integer>
+
+<!-- image creation options -->	
+	<key>auto-stretch</key>
+	<false/>
+	
+	<key>hfsplus-stretch-parameters</key>
+	<dict>
+		<key>hfsplus-stretch-threshold</key>
+		<integer>524288</integer>
+		<key>hfsplus-stretch-allocation-block-size</key>
+		<integer>4096</integer>
+		<key>hfsplus-stretch-allocation-file-size</key>
+		<integer>8388608</integer>
+	</dict>
+
+	<key>nbi-spotlight-indexing</key>
+	<false/>
+	
+<!-- image from folder options -->
+
+<!-- iff-usehelper - if true, uses copy-helper to do the copy phase -->
+	<key>iff-usehelper</key>
+	<true/>	
+	<key>iff-format</key>
+	<string>UDZO</string>
+
+<!-- iff temp file usage
+	iff-temp-use-rw-if-possible - use read/write images for temp if possible
+	iff-temp-sparse-band-size - normally we use 2048 (1MB) for sparse images, set to 20480 (10MB) for IFF temp sparse images
+-->	
+	<key>iff-temp-use-rw-if-possible</key>
+	<true/>
+	<key>iff-temp-sparse-band-size</key>
+	<integer>20480</integer>
+
+<!-- iff-fs - file system to use if fs not specified and we cannot find a best match -->
+<!-- iff-layout - only used if iff-fs kicks in, otherwise we use layout specified
+	or the default layout as determined from the file system personality -->
+	<key>iff-fs</key>
+	<string>HFS+</string>
+	<key>iff-layout</key>
+	<string>GPTSPUD</string>
+
+	<key>iff-spotlight-indexing</key>
+	<false/>
+	
+<!--	auto means ON for image from volume, leave alone for image from folder	-->
+	<key>iff-source-owners</key>
+	<string>auto</string>
+	
+	<key>ifd-format</key>
+	<string>UDZO</string>
+<!-- ifd-segment-size - 0 means unlimited, otherwise integer is in sectors -->
+	<key>ifd-segment-size</key>
+	<integer>0</integer>
+	
+<!-- debugging options -->	
+	<key>verbose</key>
+	<false/>
+	<key>debug</key>
+	<false/>
+
+<!-- compression options -->
+	<key>zlib-level</key>
+	<integer>1</integer>				<!-- 0 is no compression, 1 is best speed, 9 is slowest -->
+	<key>bzip2-level</key>
+	<integer>0</integer>				<!-- 0 means auto, 1 is best speed, 9 is slowest -->
+	
+<!-- sparsebundle options -->
+	<key>bundlebs-remotefdcount</key>
+	<integer>3</integer>
+	<key>bundlebs-localfdcount</key>
+	<integer>6</integer>
+	<key>bundlebs-remotecloseonsleep</key>
+	<false/>
+	<key>bundlebs-localcloseonsleep</key>
+	<false/>
+	<key>bundlebs-remotecloseonidle</key>	
+	<false/>
+	<key>bundlebs-localcloseonidle</key>	
+	<false/>
+	<key>bundlebs-remotecloseonflush</key>	
+	<false/>
+	<key>bundlebs-localcloseonflush</key>	
+	<false/>
+	<key>bundlebs-checkpointing</key>	
+	<false/>
+	<key>sparsebundle-compactonidle</key>	
+	<false/>
+
+<!-- presently unused options -->
+	<key>unmount-timeout</key>
+	<integer>0</integer>
+	
+</dict>
+</plist>

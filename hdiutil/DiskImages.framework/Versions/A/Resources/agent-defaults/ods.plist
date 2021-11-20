@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!-- TODO: see what other prefs ODS is passing and encapsulate them here -->
+<dict>
+	<!-- 5599207: need to time out I/O and eject if host becomes unrechable -->
+	<key>http-timeout</key>
+	<integer>30</integer>
+	<key>suppress-uiagent</key>
+	<true/>
+	<key>auto-open-ro-root</key>
+	<false/>
+</dict>
+</plist>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>auto-open-ro-root</key>
+	<false/>
+	<key>auto-open-rw-root</key>
+	<false/>
+	<key>suppress-uiagent</key>
+	<true/>
+	<key>callback-with-sla</key>
+	<true/>
+	<key>auto-fsck-failure-override-type</key>
+	<string>cfusernotification</string>
+	<key>allow-tty-prompt</key>
+	<false/>
+</dict>
+</plist>

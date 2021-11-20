@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>auto-open-ro-root</key>
+	<false/>
+	<key>auto-open-rw-root</key>
+	<false/>
+	<key>callback-with-sla</key>
+	<false/>
+	<key>enable-owners</key>
+	<true/>
+	<key>mount-nobrowse</key>
+	<true/>
+	<key>mount-required</key>
+	<true/>
+	<key>skip-verify</key>
+	<true/>
+	<key>suppress-uiagent</key>
+	<false/>
+	<key>system-image</key>
+	<true/>
+
+	<key>skip-auto-fsck-for-system-images</key>		<!-- even though this is a system-image, still try to auto-fsck if necessary -->
+	<false/>
+</dict>
+</plist>
