@@ -192,8 +192,7 @@ async function init() {
 			ora.info(`Code signing identity: ${match[1]}`).start();
 			ora.succeed(`Created “${dmgFilename}”`);
 		} catch (error) {
-			ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${Object.prototype.hasOwnProperty.call(error, 'stderr') ? error.stderr.trim() : error}`);
-			process.exit(2);
+			ora.warn(`Code signing failed. The DMG is fine, just not code signed.\n${Object.prototype.hasOwnProperty.call(error, 'stderr') ? error.stderr.trim() : error}`);
 		}
 	});
 
