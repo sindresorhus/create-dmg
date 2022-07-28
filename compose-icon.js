@@ -18,8 +18,11 @@ const biggestPossibleIconType = 'ic10';
 async function composeIcon(type, appIcon, mountIcon, composedIcon) {
 	mountIcon = gm(mountIcon);
 	appIcon = gm(appIcon);
-	const appIconSize = await promisify(appIcon.size.bind(appIcon))();
-	const mountIconSize = await promisify(appIcon.size.bind(mountIcon))();
+
+	const [appIconSize, mountIconSize] = await Promise.all([
+		promisify(appIcon.size.bind(appIcon))(),
+		promisify(appIcon.size.bind(mountIcon))()
+	]);
 
 	// Change the perspective of the app icon to match the mount drive icon
 	appIcon = appIcon.out('-matte').out('-virtual-pixel', 'transparent').out('-distort', 'Perspective', `1,1  ${appIconSize.width * 0.08},1     ${appIconSize.width},1  ${appIconSize.width * 0.92},1     1,${appIconSize.height}  1,${appIconSize.height}     ${appIconSize.width},${appIconSize.height}  ${appIconSize.width},${appIconSize.height}`);
