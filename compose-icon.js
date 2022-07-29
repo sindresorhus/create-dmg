@@ -13,17 +13,22 @@ const filterMap = (map, filterFn) => Object.entries(map).filter(filterFn).reduce
 // Drive icon from `/System/Library/Extensions/IOStorageFamily.kext/Contents/Resources/Removable.icns``
 const baseDiskIconPath = `${__dirname}/disk-icon.icns`;
 
+const biggestPossibleIconType = 'ic10';
+
 async function composeIcon(type, appIcon, mountIcon, composedIcon) {
 	mountIcon = gm(mountIcon);
 	appIcon = gm(appIcon);
-	const appIconSize = await promisify(appIcon.size.bind(appIcon))();
-	const mountIconSize = appIconSize;
+
+	const [appIconSize, mountIconSize] = await Promise.all([
+		promisify(appIcon.size.bind(appIcon))(),
+		promisify(appIcon.size.bind(mountIcon))()
+	]);
 
 	// Change the perspective of the app icon to match the mount drive icon
 	appIcon = appIcon.out('-matte').out('-virtual-pixel', 'transparent').out('-distort', 'Perspective', `1,1  ${appIconSize.width * 0.08},1     ${appIconSize.width},1  ${appIconSize.width * 0.92},1     1,${appIconSize.height}  1,${appIconSize.height}     ${appIconSize.width},${appIconSize.height}  ${appIconSize.width},${appIconSize.height}`);
 
 	// Resize the app icon to fit it inside the mount icon, aspect ration should not be kept to create the perspective illution
-	appIcon = appIcon.resize(appIconSize.width / 1.7, appIconSize.height / 1.78, '!');
+	appIcon = appIcon.resize(mountIconSize.width / 1.7, mountIconSize.height / 1.78, '!');
 
 	const tempAppIconPath = tempy.file({extension: 'png'});
 	await promisify(appIcon.write.bind(appIcon))(tempAppIconPath);
@@ -64,6 +69,12 @@ module.exports = async appIconPath => {
 
 		console.warn('There is no base image for this type', type);
 	}));
+
+	if (!composedIcon[biggestPossibleIconType]) {
+		// Make sure the highest-resolution variant is generated
+		const largestAppIcon = Object.values(appIcon).sort((a, b) => Buffer.byteLength(b) - Buffer.byteLength(a))[0];
+		await composeIcon(biggestPossibleIconType, largestAppIcon, baseDiskIcons[biggestPossibleIconType], composedIcon);
+	}
 
 	const tempComposedIcon = tempy.file({extension: 'icns'});
 
