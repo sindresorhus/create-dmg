@@ -28,13 +28,13 @@ async function composeIcon(type, appIcon, mountIcon, composedIcon) {
 	appIcon = appIcon.out('-matte').out('-virtual-pixel', 'transparent').out('-distort', 'Perspective', `1,1  ${appIconSize.width * 0.08},1     ${appIconSize.width},1  ${appIconSize.width * 0.92},1     1,${appIconSize.height}  1,${appIconSize.height}     ${appIconSize.width},${appIconSize.height}  ${appIconSize.width},${appIconSize.height}`);
 
 	// Resize the app icon to fit it inside the mount icon, aspect ration should not be kept to create the perspective illution
-	appIcon = appIcon.resize(mountIconSize.width / 1.7, mountIconSize.height / 1.78, '!');
+	appIcon = appIcon.resize(mountIconSize.width / 1.58, mountIconSize.height / 1.82, '!');
 
 	const tempAppIconPath = tempy.file({extension: 'png'});
 	await promisify(appIcon.write.bind(appIcon))(tempAppIconPath);
 
 	// Compose the two icons
-	const iconGravityFactor = mountIconSize.height * 0.155;
+	const iconGravityFactor = mountIconSize.height * 0.063;
 	mountIcon = mountIcon.composite(tempAppIconPath).gravity('Center').geometry(`+0-${iconGravityFactor}`);
 
 	composedIcon[type] = await promisify(mountIcon.toBuffer.bind(mountIcon))();
