@@ -4,9 +4,9 @@
 
 Imagine you have finished a macOS app, exported it from Xcode, and now want to distribute it to users. The most common way of distributing an app outside the Mac App Store is by putting it in a `.dmg` file. These are hard to create, especially good-looking ones. You can either pay for a GUI app where you have to customize an existing design or you can run some homebrewed Bash script and you still have to design it. This tool does everything for you, so you can play with your 🐈 instead.
 
-<img src="screenshot-cli.gif" width="998">
+<img src="screenshot-cli.gif">
 
-*This tool is intentionally opinionated and simple. I'm not interested in adding lots of options.*
+_This tool is intentionally opinionated and simple. I'm not interested in adding lots of options._
 
 ## Install
 
