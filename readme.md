@@ -6,7 +6,7 @@ Imagine you have finished a macOS app, exported it from Xcode, and now want to d
 
 <img src="screenshot-cli.gif">
 
-_This tool is intentionally opinionated and simple. I'm not interested in adding lots of options._
+*This tool is intentionally opinionated and simple. I'm not interested in adding lots of options.*
 
 ## Install
 
