@@ -7,7 +7,7 @@ const appdmg = require('appdmg');
 const plist = require('plist');
 const Ora = require('ora');
 const execa = require('execa');
-const addLicenseAgreementIfNeeded = require('./sla.js');
+const addLicenseAgreementIfNeeded = require('./sla');
 const composeIcon = require('./compose-icon');
 
 if (process.platform !== 'darwin') {
