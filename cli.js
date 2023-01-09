@@ -173,7 +173,7 @@ async function init() {
 			} else if (!cli.flags.identity && stdout.includes('Mac Developer:')) {
 				identity = 'Mac Developer';
 			} else if (!cli.flags.identity && stdout.includes('Apple Development:')) {
-				identity = 'Apple Development:';
+				identity = 'Apple Development';
 			}
 
 			if (!identity) {
