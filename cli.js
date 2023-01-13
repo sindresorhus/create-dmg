@@ -87,7 +87,7 @@ async function init() {
 	const dmgFilename = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
 	const dmgPath = path.join(destinationPath, dmgFilename);
 
-	if (dmgTitle > 27) {
+	if (dmgTitle.length > 27) {
 		ora.fail('The disk image title cannot exceed 27 characters. This is a limitation in a dependency: https://github.com/LinusU/node-alias/issues/7');
 		process.exit(1);
 	}
