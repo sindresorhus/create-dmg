@@ -107,9 +107,12 @@ async function init() {
 	}
 
 	const minSystemVersion = (Object.prototype.hasOwnProperty.call(appInfo, 'LSMinimumSystemVersion') && appInfo.LSMinimumSystemVersion.length > 0) ? appInfo.LSMinimumSystemVersion.toString() : '10.11';
-	const minorVersion = Number(minSystemVersion.split('.')[1]) || 0;
-	const dmgFormat = (minorVersion >= 11) ? 'ULFO' : 'UDZO'; // ULFO requires 10.11+
-	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format`).start();
+	const minSystemVersionComponents = minSystemVersion.split('.');
+	const majorVersion = Number(minSystemVersionComponents[0]) || 0;
+	const minorVersion = Number(minSystemVersionComponents[1]) || 0;
+	const dmgFormat = (majorVersion > 10 || (majorVersion == 10 && minorVersion >= 11)) ? 'ULFO' : 'UDZO'; // ULFO requires 10.11+
+	const dmgFilesystem = (majorVersion > 10 || (majorVersion == 10 && minorVersion >= 13)) ? 'APFS' : 'HFS+' // APFS requires 10.13+
+	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format and ${dmgFilesystem} filesystem`).start();
 
 	const ee = appdmg({
 		target: dmgPath,
@@ -123,6 +126,7 @@ async function init() {
 			background: path.join(__dirname, 'assets/dmg-background.png'),
 			'icon-size': 160,
 			format: dmgFormat,
+			filesystem: dmgFilesystem,
 			window: {
 				size: {
 					width: 660,
