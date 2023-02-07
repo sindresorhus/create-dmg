@@ -106,10 +106,9 @@ async function init() {
 		composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
 	}
 
-	const minSystemVersion = (Object.prototype.hasOwnProperty.call(appInfo, 'LSMinimumSystemVersion') && appInfo.LSMinimumSystemVersion.length > 0) ? appInfo.LSMinimumSystemVersion.toString() : '10.11';
-	const minorVersion = Number(minSystemVersion.split('.')[1]) || 0;
-	const dmgFormat = (minorVersion >= 11) ? 'ULFO' : 'UDZO'; // ULFO requires 10.11+
-	ora.info(`Minimum runtime ${minSystemVersion} detected, using ${dmgFormat} format`).start();
+	// Xcode 14+ only supports building apps for macOS 10.13+
+	const dmgFormat = 'ULFO'; // ULFO requires macOS 10.11+
+	const dmgFilesystem = 'APFS'; // APFS requires macOS 10.13+
 
 	const ee = appdmg({
 		target: dmgPath,
@@ -123,6 +122,7 @@ async function init() {
 			background: path.join(__dirname, 'assets/dmg-background.png'),
 			'icon-size': 160,
 			format: dmgFormat,
+			filesystem: dmgFilesystem,
 			window: {
 				size: {
 					width: 660,
