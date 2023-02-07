@@ -107,8 +107,8 @@ async function init() {
 	}
 
 	// Xcode 14+ only supports building apps for macOS 10.13+
-	const dmgFormat = "ULFO"; // ULFO requires macOS 10.11+
-	const dmgFilesystem = "APFS"; // APFS requires macOS 10.13+
+	const dmgFormat = 'ULFO'; // ULFO requires macOS 10.11+
+	const dmgFilesystem = 'APFS'; // APFS requires macOS 10.13+
 
 	const ee = appdmg({
 		target: dmgPath,
