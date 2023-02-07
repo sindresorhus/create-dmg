@@ -10,10 +10,10 @@ Imagine you have finished a macOS app, exported it from Xcode, and now want to d
 
 ## Install
 
-Ensure you have [Node.js](https://nodejs.org) 8 or later installed. Then run the following:
+Ensure you have [Node.js](https://nodejs.org) 14 or later installed. Then run the following:
 
-```
-$ npm install --global create-dmg
+```sh
+npm install --global create-dmg
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ $ create-dmg --help
 
 ## DMG
 
-The DMG requires macOS 10.13 or later and has the filename `App Name 0.0.0.dmg`, for example `Lungo 1.0.0.dmg`.
+The DMG requires macOS 10.13 or later and has the filename `App Name 0.0.0.dmg`. For example, `Lungo 1.0.0.dmg`.
 
 It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
 
@@ -56,8 +56,8 @@ If either `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](http
 
 #### Steps using [Homebrew](https://brew.sh)
 
-```
-$ brew install graphicsmagick imagemagick
+```sh
+brew install graphicsmagick imagemagick
 ```
 
 #### Icon example
@@ -66,13 +66,9 @@ Original icon → DMG icon
 
 <img src="icon-example-app.png" width="300"><img src="icon-example.png" width="300">
 
-## Links
-
-- [Product Hunt post](https://www.producthunt.com/posts/create-dmg)
-
 ## Related
 
 - [Defaults](https://github.com/sindresorhus/Defaults) - Swifty and modern UserDefaults
 - [LaunchAtLogin](https://github.com/sindresorhus/LaunchAtLogin) - Add “Launch at Login” functionality to your macOS
-- [Preferences](https://github.com/sindresorhus/Preferences) - Add a preferences window to your macOS app
+- [My apps](https://sindresorhus.com/apps)
 - [More…](https://github.com/search?q=user%3Asindresorhus+language%3Aswift)

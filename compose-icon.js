@@ -1,27 +1,33 @@
-const fs = require('fs');
-const {promisify} = require('util');
-const execa = require('execa');
-const tempy = require('tempy');
-const gm = require('gm').subClass({imageMagick: true});
-const icns = require('icns-lib');
+import {Buffer} from 'node:buffer';
+import fs from 'node:fs';
+import {promisify} from 'node:util';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {execa} from 'execa';
+import {temporaryFile} from 'tempy';
+import baseGm from 'gm';
+import icns from 'icns-lib';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const gm = baseGm.subClass({imageMagick: true});
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
-const filterMap = (map, filterFn) => Object.entries(map).filter(filterFn).reduce((out, [key, item]) => ({...out, [key]: item}), {});
+const filterMap = (map, filterFunction) => Object.fromEntries(Object.entries(map).filter(element => filterFunction(element)).map(([key, item]) => [key, item]));
 
 // Drive icon from `/System/Library/Extensions/IOStorageFamily.kext/Contents/Resources/Removable.icns``
 const baseDiskIconPath = `${__dirname}/disk-icon.icns`;
 
 const biggestPossibleIconType = 'ic10';
 
-async function composeIcon(type, appIcon, mountIcon, composedIcon) {
+async function baseComposeIcon(type, appIcon, mountIcon, composedIcon) {
 	mountIcon = gm(mountIcon);
 	appIcon = gm(appIcon);
 
 	const [appIconSize, mountIconSize] = await Promise.all([
 		promisify(appIcon.size.bind(appIcon))(),
-		promisify(appIcon.size.bind(mountIcon))()
+		promisify(appIcon.size.bind(mountIcon))(),
 	]);
 
 	// Change the perspective of the app icon to match the mount drive icon
@@ -30,12 +36,12 @@ async function composeIcon(type, appIcon, mountIcon, composedIcon) {
 	// Resize the app icon to fit it inside the mount icon, aspect ration should not be kept to create the perspective illution
 	appIcon = appIcon.resize(mountIconSize.width / 1.58, mountIconSize.height / 1.82, '!');
 
-	const tempAppIconPath = tempy.file({extension: 'png'});
-	await promisify(appIcon.write.bind(appIcon))(tempAppIconPath);
+	const temporaryAppIconPath = temporaryFile({extension: 'png'});
+	await promisify(appIcon.write.bind(appIcon))(temporaryAppIconPath);
 
 	// Compose the two icons
 	const iconGravityFactor = mountIconSize.height * 0.063;
-	mountIcon = mountIcon.composite(tempAppIconPath).gravity('Center').geometry(`+0-${iconGravityFactor}`);
+	mountIcon = mountIcon.composite(temporaryAppIconPath).gravity('Center').geometry(`+0-${iconGravityFactor}`);
 
 	composedIcon[type] = await promisify(mountIcon.toBuffer.bind(mountIcon))();
 }
@@ -53,7 +59,7 @@ const hasGm = async () => {
 	}
 };
 
-module.exports = async appIconPath => {
+export default async function composeIcon(appIconPath) {
 	if (!await hasGm()) {
 		return baseDiskIconPath;
 	}
@@ -64,7 +70,7 @@ module.exports = async appIconPath => {
 	const composedIcon = {};
 	await Promise.all(Object.entries(appIcon).map(async ([type, icon]) => {
 		if (baseDiskIcons[type]) {
-			return composeIcon(type, icon, baseDiskIcons[type], composedIcon);
+			return baseComposeIcon(type, icon, baseDiskIcons[type], composedIcon);
 		}
 
 		console.warn('There is no base image for this type', type);
@@ -73,12 +79,12 @@ module.exports = async appIconPath => {
 	if (!composedIcon[biggestPossibleIconType]) {
 		// Make sure the highest-resolution variant is generated
 		const largestAppIcon = Object.values(appIcon).sort((a, b) => Buffer.byteLength(b) - Buffer.byteLength(a))[0];
-		await composeIcon(biggestPossibleIconType, largestAppIcon, baseDiskIcons[biggestPossibleIconType], composedIcon);
+		await baseComposeIcon(biggestPossibleIconType, largestAppIcon, baseDiskIcons[biggestPossibleIconType], composedIcon);
 	}
 
-	const tempComposedIcon = tempy.file({extension: 'icns'});
+	const temporaryComposedIcon = temporaryFile({extension: 'icns'});
 
-	await writeFile(tempComposedIcon, icns.format(composedIcon));
+	await writeFile(temporaryComposedIcon, icns.format(composedIcon));
 
-	return tempComposedIcon;
-};
+	return temporaryComposedIcon;
+}

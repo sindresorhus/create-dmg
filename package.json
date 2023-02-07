@@ -10,14 +10,15 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "https://sindresorhus.com"
 	},
+	"type": "module",
 	"bin": {
-		"create-dmg": "cli.js"
+		"create-dmg": "./cli.js"
 	},
 	"engines": {
-		"node": ">=8"
+		"node": ">=14.16"
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "ava"
 	},
 	"files": [
 		"cli.js",
@@ -43,16 +44,16 @@
 	],
 	"dependencies": {
 		"appdmg": "^0.6.6",
-		"execa": "^1.0.0",
-		"gm": "^1.23.1",
+		"execa": "^6.1.0",
+		"gm": "^1.25.0",
 		"icns-lib": "^1.0.1",
-		"meow": "^5.0.0",
-		"ora": "^4.0.3",
-		"plist": "^3.0.1",
-		"tempy": "^0.3.0"
+		"meow": "^11.0.0",
+		"ora": "^6.1.2",
+		"plist": "^3.0.6",
+		"tempy": "^3.0.0"
 	},
 	"devDependencies": {
-		"ava": "^2.4.0",
-		"xo": "^0.25.3"
+		"ava": "^5.2.0",
+		"xo": "^0.53.1"
 	}
 }

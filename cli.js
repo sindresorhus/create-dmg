@@ -1,14 +1,17 @@
 #!/usr/bin/env node
-'use strict';
-const path = require('path');
-const fs = require('fs');
-const meow = require('meow');
-const appdmg = require('appdmg');
-const plist = require('plist');
-const Ora = require('ora');
-const execa = require('execa');
-const addLicenseAgreementIfNeeded = require('./sla');
-const composeIcon = require('./compose-icon');
+import process from 'node:process';
+import path from 'node:path';
+import fs from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import meow from 'meow';
+import appdmg from 'appdmg';
+import plist from 'plist';
+import Ora from 'ora';
+import {execa} from 'execa';
+import addLicenseAgreementIfNeeded from './sla.js';
+import composeIcon from './compose-icon.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 if (process.platform !== 'darwin') {
 	console.error('macOS only');
@@ -28,17 +31,18 @@ const cli = meow(`
 	  $ create-dmg 'Lungo.app'
 	  $ create-dmg 'Lungo.app' Build/Releases
 `, {
+	importMeta: import.meta,
 	flags: {
 		overwrite: {
-			type: 'boolean'
+			type: 'boolean',
 		},
 		identity: {
-			type: 'string'
+			type: 'string',
 		},
 		dmgTitle: {
-			type: 'string'
-		}
-	}
+			type: 'string',
+		},
+	},
 });
 
 let [appPath, destinationPath] = cli.input;
@@ -73,7 +77,7 @@ async function init() {
 	let appInfo;
 	try {
 		appInfo = plist.parse(infoPlist);
-	} catch (_) {
+	} catch {
 		const {stdout} = await execa('/usr/bin/plutil', ['-convert', 'xml1', '-o', '-', infoPlistPath]);
 		appInfo = plist.parse(stdout);
 	}
@@ -95,7 +99,7 @@ async function init() {
 	if (cli.flags.overwrite) {
 		try {
 			fs.unlinkSync(dmgPath);
-		} catch (_) {}
+		} catch {}
 	}
 
 	const hasAppIcon = appInfo.CFBundleIconFile;
@@ -126,24 +130,24 @@ async function init() {
 			window: {
 				size: {
 					width: 660,
-					height: 400
-				}
+					height: 400,
+				},
 			},
 			contents: [
 				{
 					x: 180,
 					y: 170,
 					type: 'file',
-					path: appPath
+					path: appPath,
 				},
 				{
 					x: 480,
 					y: 170,
 					type: 'link',
-					path: '/Applications'
-				}
-			]
-		}
+					path: '/Applications',
+				},
+			],
+		},
 	});
 
 	ee.on('progress', info => {
@@ -177,7 +181,7 @@ async function init() {
 			}
 
 			if (!identity) {
-				const error = new Error();
+				const error = new Error(); // eslint-disable-line unicorn/error-message
 				error.stderr = 'No suitable code signing identity found';
 				throw error;
 			}
@@ -205,7 +209,9 @@ async function init() {
 	});
 }
 
-init().catch(error => {
+try {
+	await init();
+} catch (error) {
 	ora.fail((error && error.stack) || error);
 	process.exit(1);
-});
+}
