@@ -186,7 +186,13 @@ async function init() {
 				throw error;
 			}
 
-			await execa('/usr/bin/codesign', ['--sign', identity, dmgPath]);
+			try {
+				await execa('/usr/bin/codesign', ['--sign', identity, dmgPath]);
+			} catch (error) {
+				ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${error.stderr?.trim() ?? error}`);
+				process.exit(2);
+			}
+
 			const {stderr} = await execa('/usr/bin/codesign', [dmgPath, '--display', '--verbose=2']);
 
 			const match = /^Authority=(.*)$/m.exec(stderr);
@@ -198,7 +204,7 @@ async function init() {
 			ora.info(`Code signing identity: ${match[1]}`).start();
 			ora.succeed(`Created “${dmgFilename}”`);
 		} catch (error) {
-			ora.fail(`Code signing failed. The DMG is fine, just not code signed.\n${Object.prototype.hasOwnProperty.call(error, 'stderr') ? error.stderr.trim() : error}`);
+			ora.fail(`${error.stderr?.trim() ?? error}`);
 			process.exit(2);
 		}
 	});
