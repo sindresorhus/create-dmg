@@ -161,12 +161,6 @@ async function init() {
 			ora.text = 'Adding Software License Agreement if needed';
 			await addLicenseAgreementIfNeeded(dmgPath, dmgFormat);
 
-			if (hasAppIcon) {
-				ora.text = 'Replacing DMG icon';
-				// `seticon`` is a native tool to change files icons (Source: https://github.com/sveinbjornt/osxiconutils)
-				await execa(path.join(__dirname, 'seticon'), [composedIconPath, dmgPath]);
-			}
-
 			ora.text = 'Code signing DMG';
 			let identity;
 			const {stdout} = await execa('/usr/bin/security', ['find-identity', '-v', '-p', 'codesigning']);
