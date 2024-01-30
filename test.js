@@ -11,7 +11,7 @@ test('main', async t => {
 	const cwd = temporaryDirectory();
 
 	try {
-		await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixtures/Fixture.app')], {cwd});
+		await execa(path.join(__dirname, 'cli.js'), ['--identity=0', path.join(__dirname, 'fixtures/Fixture.app')], {cwd});
 	} catch (error) {
 		// Silence code signing failure
 		if (!error.message.includes('No suitable code signing')) {
@@ -26,7 +26,7 @@ test('binary plist', async t => {
 	const cwd = temporaryDirectory();
 
 	try {
-		await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixtures/Fixture-with-binary-plist.app')], {cwd});
+		await execa(path.join(__dirname, 'cli.js'), ['--identity=0', path.join(__dirname, 'fixtures/Fixture-with-binary-plist.app')], {cwd});
 	} catch (error) {
 		// Silence code signing failure
 		if (!error.message.includes('No suitable code signing')) {
@@ -41,7 +41,7 @@ test('app without icon', async t => {
 	const cwd = temporaryDirectory();
 
 	try {
-		await execa(path.join(__dirname, 'cli.js'), [path.join(__dirname, 'fixtures/Fixture-no-icon.app')], {cwd});
+		await execa(path.join(__dirname, 'cli.js'), ['--identity=0', path.join(__dirname, 'fixtures/Fixture-no-icon.app')], {cwd});
 	} catch (error) {
 		// Silence code signing failure
 		if (!error.message.includes('No suitable code signing')) {

@@ -10,7 +10,7 @@ Imagine you have finished a macOS app, exported it from Xcode, and now want to d
 
 ## Install
 
-Ensure you have [Node.js](https://nodejs.org) 14 or later installed. Then run the following:
+Ensure you have [Node.js](https://nodejs.org) 18 or later installed. Then run the following:
 
 ```sh
 npm install --global create-dmg

@@ -82,12 +82,12 @@ async function init() {
 		appInfo = plist.parse(stdout);
 	}
 
-	const appName = appInfo.CFBundleDisplayName || appInfo.CFBundleName;
+	const appName = appInfo.CFBundleDisplayName ?? appInfo.CFBundleName;
 	if (!appName) {
 		throw new Error('The app must have `CFBundleDisplayName` or `CFBundleName` defined in its `Info.plist`.');
 	}
 
-	const dmgTitle = cli.flags.dmgTitle || appName;
+	const dmgTitle = cli.flags.dmgTitle ?? appName;
 	const dmgFilename = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
 	const dmgPath = path.join(destinationPath, dmgFilename);
 
@@ -110,7 +110,6 @@ async function init() {
 		composedIconPath = await composeIcon(path.join(appPath, 'Contents/Resources', `${appIconName}.icns`));
 	}
 
-	// Xcode 14+ only supports building apps for macOS 10.13+
 	const dmgFormat = 'ULFO'; // ULFO requires macOS 10.11+
 	const dmgFilesystem = 'APFS'; // APFS requires macOS 10.13+
 
@@ -212,6 +211,6 @@ async function init() {
 try {
 	await init();
 } catch (error) {
-	ora.fail((error && error.stack) || error);
+	ora.fail(error?.stack || error);
 	process.exit(1);
 }

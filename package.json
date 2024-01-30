@@ -14,9 +14,8 @@
 	"bin": {
 		"create-dmg": "./cli.js"
 	},
-	"sideEffects": false,
 	"engines": {
-		"node": ">=14.16"
+		"node": ">=18"
 	},
 	"scripts": {
 		"test": "ava"
@@ -44,16 +43,16 @@
 	],
 	"dependencies": {
 		"appdmg": "^0.6.6",
-		"execa": "^6.1.0",
+		"execa": "^8.0.1",
 		"gm": "^1.25.0",
 		"icns-lib": "^1.0.1",
-		"meow": "^11.0.0",
-		"ora": "^6.1.2",
-		"plist": "^3.0.6",
-		"tempy": "^3.0.0"
+		"meow": "^13.1.0",
+		"ora": "^8.0.1",
+		"plist": "^3.1.0",
+		"tempy": "^3.1.0"
 	},
 	"devDependencies": {
-		"ava": "^5.2.0",
-		"xo": "^0.53.1"
+		"ava": "^6.1.1",
+		"xo": "^0.56.0"
 	}
 }
