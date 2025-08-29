@@ -18,11 +18,14 @@
 		"node": ">=18"
 	},
 	"scripts": {
-		"test": "ava"
+		"test": "ava",
+		"build": "./build-swift.sh",
+		"prepublishOnly": "npm run build"
 	},
 	"files": [
 		"cli.js",
 		"compose-icon.js",
+		"compose-icon",
 		"assets",
 		"disk-icon.icns",
 		"sla.js",
@@ -44,7 +47,6 @@
 	"dependencies": {
 		"appdmg": "^0.6.6",
 		"execa": "^8.0.1",
-		"gm": "^1.25.0",
 		"icns-lib": "^1.0.1",
 		"meow": "^13.1.0",
 		"ora": "^8.0.1",

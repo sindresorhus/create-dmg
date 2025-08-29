@@ -5,12 +5,10 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execa} from 'execa';
 import {temporaryFile} from 'tempy';
-import baseGm from 'gm';
 import icns from 'icns-lib';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const gm = baseGm.subClass({imageMagick: true});
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
@@ -22,45 +20,43 @@ const baseDiskIconPath = `${__dirname}/disk-icon.icns`;
 const biggestPossibleIconType = 'ic10';
 
 async function baseComposeIcon(type, appIcon, mountIcon, composedIcon) {
-	mountIcon = gm(mountIcon);
-	appIcon = gm(appIcon);
-
-	const [appIconSize, mountIconSize] = await Promise.all([
-		promisify(appIcon.size.bind(appIcon))(),
-		promisify(appIcon.size.bind(mountIcon))(),
-	]);
-
-	// Change the perspective of the app icon to match the mount drive icon
-	appIcon = appIcon.out('-matte').out('-virtual-pixel', 'transparent').out('-distort', 'Perspective', `1,1  ${appIconSize.width * 0.08},1     ${appIconSize.width},1  ${appIconSize.width * 0.92},1     1,${appIconSize.height}  1,${appIconSize.height}     ${appIconSize.width},${appIconSize.height}  ${appIconSize.width},${appIconSize.height}`);
-
-	// Resize the app icon to fit it inside the mount icon, aspect ration should not be kept to create the perspective illution
-	appIcon = appIcon.resize(mountIconSize.width / 1.58, mountIconSize.height / 1.82, '!');
-
+	// Write app and mount icons to temporary PNG files
 	const temporaryAppIconPath = temporaryFile({extension: 'png'});
-	await promisify(appIcon.write.bind(appIcon))(temporaryAppIconPath);
+	const temporaryMountIconPath = temporaryFile({extension: 'png'});
+	const temporaryOutputPath = temporaryFile({extension: 'png'});
 
-	// Compose the two icons
-	const iconGravityFactor = mountIconSize.height * 0.063;
-	mountIcon = mountIcon.composite(temporaryAppIconPath).gravity('Center').geometry(`+0-${iconGravityFactor}`);
+	await writeFile(temporaryAppIconPath, appIcon);
+	await writeFile(temporaryMountIconPath, mountIcon);
 
-	composedIcon[type] = await promisify(mountIcon.toBuffer.bind(mountIcon))();
+	// Use Swift executable for image processing
+	const swiftExecutablePath = path.join(__dirname, 'compose-icon');
+	
+	try {
+		await execa(swiftExecutablePath, [
+			temporaryAppIconPath,
+			temporaryMountIconPath,
+			temporaryOutputPath
+		]);
+
+		// Read the composed image back
+		composedIcon[type] = await readFile(temporaryOutputPath);
+	} catch (error) {
+		throw new Error(`Swift image processing failed: ${error.message}`);
+	}
 }
 
-const hasGm = async () => {
+const hasSwiftExecutable = async () => {
+	const swiftExecutablePath = path.join(__dirname, 'compose-icon');
 	try {
-		await execa('gm', ['-version']);
+		await fs.promises.access(swiftExecutablePath, fs.constants.F_OK | fs.constants.X_OK);
 		return true;
 	} catch (error) {
-		if (error.code === 'ENOENT') {
-			return false;
-		}
-
-		throw error;
+		return false;
 	}
 };
 
 export default async function composeIcon(appIconPath) {
-	if (!await hasGm()) {
+	if (!await hasSwiftExecutable()) {
 		return baseDiskIconPath;
 	}
 
