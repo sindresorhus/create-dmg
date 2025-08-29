@@ -1,13 +1,26 @@
 import CoreGraphics
 import CoreImage
 import Foundation
+import CoreImage.CIFilterBuiltins
 import ImageIO
 import UniformTypeIdentifiers
+
+func cgContext(width: Int, height: Int) -> CGContext? {
+    CGContext(
+        data: nil,
+        width: width,
+        height: height,
+        bitsPerComponent: 8,
+        bytesPerRow: 0,
+        space: CGColorSpaceCreateDeviceRGB(),
+        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+    )
+}
 
 func perspectiveTransform(image: CGImage, width: Int, height: Int) -> CGImage? {
     // Apply perspective transformation directly to the image
     let ciImage = CIImage(cgImage: image)
-    let filter = CIFilter(name: "CIPerspectiveTransform")!
+    let filter = CIFilter.perspectiveTransform()
     
     let w = CGFloat(width)
     let h = CGFloat(height)
@@ -23,17 +36,7 @@ func perspectiveTransform(image: CGImage, width: Int, height: Int) -> CGImage? {
     guard let outputImage = filter.outputImage else { return nil }
     
     // Create context for the final image
-    let context = CGContext(
-        data: nil,
-        width: width,
-        height: height,
-        bitsPerComponent: 8,
-        bytesPerRow: 0,
-        space: CGColorSpaceCreateDeviceRGB(),
-        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-    )
-    
-    guard let ctx = context else { return nil }
+    guard let ctx = cgContext(width: width, height: height) else { return nil }
     
     ctx.clear(CGRect(x: 0, y: 0, width: width, height: height))
     
@@ -50,18 +53,8 @@ func perspectiveTransform(image: CGImage, width: Int, height: Int) -> CGImage? {
 }
 
 func resizeImage(image: CGImage, width: Int, height: Int) -> CGImage? {
-    let context = CGContext(
-        data: nil,
-        width: width,
-        height: height,
-        bitsPerComponent: 8,
-        bytesPerRow: 0,
-        space: CGColorSpaceCreateDeviceRGB(),
-        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-    )
-    
-    guard let ctx = context else { return nil }
-    
+    guard let ctx = cgContext(width: width, height: height) else { return nil }
+
     ctx.clear(CGRect(x: 0, y: 0, width: width, height: height))
     ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
     
@@ -72,17 +65,7 @@ func compositeImages(baseImage: CGImage, overlayImage: CGImage, offsetY: CGFloat
     let width = baseImage.width
     let height = baseImage.height
     
-    let context = CGContext(
-        data: nil,
-        width: width,
-        height: height,
-        bitsPerComponent: 8,
-        bytesPerRow: 0,
-        space: CGColorSpaceCreateDeviceRGB(),
-        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
-    )
-    
-    guard let ctx = context else { return nil }
+    guard let ctx = cgContext(width: width, height: height) else { return nil }
     
     // Draw base image
     ctx.draw(baseImage, in: CGRect(x: 0, y: 0, width: width, height: height))
@@ -105,8 +88,7 @@ func compositeImages(baseImage: CGImage, overlayImage: CGImage, offsetY: CGFloat
 }
 
 func loadImage(from path: String) -> CGImage? {
-    guard let url = URL(string: "file://\(path)"),
-          let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+    guard let imageSource = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, nil) else {
         return nil
     }
     
@@ -114,8 +96,7 @@ func loadImage(from path: String) -> CGImage? {
 }
 
 func saveImage(_ image: CGImage, to path: String) -> Bool {
-    guard let url = URL(string: "file://\(path)"),
-          let destination = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else {
+    guard let destination = CGImageDestinationCreateWithURL(URL(fileURLWithPath: path) as CFURL, UTType.png.identifier as CFString, 1, nil) else {
         return false
     }
     

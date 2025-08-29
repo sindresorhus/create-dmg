@@ -45,21 +45,7 @@ async function baseComposeIcon(type, appIcon, mountIcon, composedIcon) {
 	}
 }
 
-const hasSwiftExecutable = async () => {
-	const swiftExecutablePath = path.join(__dirname, 'compose-icon');
-	try {
-		await fs.promises.access(swiftExecutablePath, fs.constants.F_OK | fs.constants.X_OK);
-		return true;
-	} catch (error) {
-		return false;
-	}
-};
-
 export default async function composeIcon(appIconPath) {
-	if (!await hasSwiftExecutable()) {
-		return baseDiskIconPath;
-	}
-
 	const baseDiskIcons = filterMap(icns.parse(await readFile(baseDiskIconPath)), ([key]) => icns.isImageType(key));
 	const appIcon = filterMap(icns.parse(await readFile(appIconPath)), ([key]) => icns.isImageType(key));
 
