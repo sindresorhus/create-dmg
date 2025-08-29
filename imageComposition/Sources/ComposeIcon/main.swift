@@ -28,10 +28,10 @@ func perspectiveTransform(image: CGImage, width: Int, height: Int) -> CGImage? {
     // From original JS transformation: top gets narrower by 8% on each side
     // CIFilter uses bottom-left origin
     filter.setValue(ciImage, forKey: kCIInputImageKey)
-    filter.setValue(CIVector(x: w * 0.08, y: h), forKey: "inputTopLeft")     // Top-left: inset 8%
-    filter.setValue(CIVector(x: w * 0.92, y: h), forKey: "inputTopRight")    // Top-right: inset to 92%
-    filter.setValue(CIVector(x: 0, y: 0), forKey: "inputBottomLeft")         // Bottom-left: no change
-    filter.setValue(CIVector(x: w, y: 0), forKey: "inputBottomRight")        // Bottom-right: no change
+    filter.topLeft = CGPoint(x: w * 0.08, y: h)    // Top-left: inset 8%
+    filter.topRight =  CGPoint(x: w * 0.92, y: h)  // Top-right: inset to 92%
+    filter.bottomLeft = CGPoint(x: 0, y: 0)        // Bottom-left: no change
+    filter.bottomRight = CGPoint(x: w, y: 0)       // Bottom-right: no change
     
     guard let outputImage = filter.outputImage else { return nil }
     
