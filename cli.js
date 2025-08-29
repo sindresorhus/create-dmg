@@ -163,6 +163,7 @@ async function init() {
 			ora.text = 'Code signing DMG';
 			let identity;
 			if (cli.flags.identity) {
+				// We skip identity validation to support both named and SHA-1 formats; let system validate.
 				identity = cli.flags.identity;
 			} else {
 				const {stdout} = await execa('/usr/bin/security', ['find-identity', '-v', '-p', 'codesigning']);
