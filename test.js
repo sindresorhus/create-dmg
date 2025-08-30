@@ -51,3 +51,19 @@ test('app without icon', async t => {
 
 	t.true(fs.existsSync(path.join(cwd, 'Fixture 0.0.1.dmg')));
 });
+
+test('--no-version-in-filename flag', async t => {
+	const cwd = temporaryDirectory();
+
+	try {
+		await execa(path.join(__dirname, 'cli.js'), ['--identity=0', '--no-version-in-filename', path.join(__dirname, 'fixtures/Fixture.app')], {cwd});
+	} catch (error) {
+		// Silence code signing failure
+		if (!error.message.includes('No suitable code signing')) {
+			throw error;
+		}
+	}
+
+	t.true(fs.existsSync(path.join(cwd, 'Fixture.dmg')));
+	t.false(fs.existsSync(path.join(cwd, 'Fixture 0.0.1.dmg')));
+});

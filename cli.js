@@ -23,9 +23,10 @@ const cli = meow(`
 	  $ create-dmg <app> [destination]
 
 	Options
-	  --overwrite          Overwrite existing DMG with the same name
-	  --identity=<value>   Manually set code signing identity (automatic by default)
-	  --dmg-title=<value>  Manually set DMG title (must be <=27 characters) [default: App name]
+	  --overwrite                  Overwrite existing DMG with the same name
+	  --no-version-in-filename     Exclude version number from DMG filename
+	  --identity=<value>           Manually set code signing identity (automatic by default)
+	  --dmg-title=<value>          Manually set DMG title (must be <=27 characters) [default: App name]
 
 	Examples
 	  $ create-dmg 'Lungo.app'
@@ -35,6 +36,10 @@ const cli = meow(`
 	flags: {
 		overwrite: {
 			type: 'boolean',
+		},
+		versionInFilename: {
+			type: 'boolean',
+			default: true,
 		},
 		identity: {
 			type: 'string',
@@ -88,7 +93,7 @@ async function init() {
 	}
 
 	const dmgTitle = cli.flags.dmgTitle ?? appName;
-	const dmgFilename = `${appName} ${appInfo.CFBundleShortVersionString}.dmg`;
+	const dmgFilename = cli.flags.versionInFilename ? `${appName} ${appInfo.CFBundleShortVersionString}.dmg` : `${appName}.dmg`;
 	const dmgPath = path.join(destinationPath, dmgFilename);
 
 	if (dmgTitle.length > 27) {
