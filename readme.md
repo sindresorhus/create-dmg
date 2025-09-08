@@ -29,6 +29,7 @@ $ create-dmg --help
     --no-version-in-filename     Exclude version number from DMG filename
     --identity=<value>           Manually set code signing identity (automatic by default)
     --dmg-title=<value>          Manually set DMG title (must be <=27 characters) [default: App name]
+    --no-code-sign               Skip code signing the DMG
 
   Examples
     $ create-dmg 'Lungo.app'
@@ -39,7 +40,7 @@ $ create-dmg --help
 
 The DMG requires macOS 10.13 or later and has the filename `App Name 0.0.0.dmg`. For example, `Lungo 1.0.0.dmg`.
 
-It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate.
+It will try to code sign the DMG, but the DMG is still created and fine even if the code signing fails, for example if you don't have a developer certificate. You can use the `--no-code-sign` flag to skip code signing entirely and prevent exit code failures in CI environments.
 
 **Important:** Don't forget to [notarize your DMG](https://stackoverflow.com/a/60800864/64949).
 

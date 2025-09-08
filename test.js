@@ -67,3 +67,12 @@ test('--no-version-in-filename flag', async t => {
 	t.true(fs.existsSync(path.join(cwd, 'Fixture.dmg')));
 	t.false(fs.existsSync(path.join(cwd, 'Fixture 0.0.1.dmg')));
 });
+
+test('--no-code-sign flag', async t => {
+	const cwd = temporaryDirectory();
+
+	// This should succeed without any code signing errors
+	await execa(path.join(__dirname, 'cli.js'), ['--no-code-sign', path.join(__dirname, 'fixtures/Fixture.app')], {cwd});
+
+	t.true(fs.existsSync(path.join(cwd, 'Fixture 0.0.1.dmg')));
+});
