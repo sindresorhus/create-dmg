@@ -50,16 +50,6 @@ If either `license.txt`, `license.rtf`, or `sla.r` ([raw SLAResources file](http
 
 `/usr/bin/rez` (from [Command Line Tools for Xcode](https://developer.apple.com/download/more/)) must be installed.
 
-### DMG icon
-
-[GraphicsMagick](http://www.graphicsmagick.org) is required to create the custom DMG icon that's based on the app icon and the macOS mounted device icon.
-
-#### Steps using [Homebrew](https://brew.sh)
-
-```sh
-brew install graphicsmagick imagemagick
-```
-
 #### Icon example
 
 Original icon → DMG icon

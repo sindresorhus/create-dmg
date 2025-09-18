@@ -13,51 +13,39 @@ func cgContext(width: Int, height: Int) -> CGContext? {
         bitsPerComponent: 8,
         bytesPerRow: 0,
         space: CGColorSpaceCreateDeviceRGB(),
-        bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
     )
 }
 
 func perspectiveTransform(image: CGImage, width: Int, height: Int) -> CGImage? {
-    // Apply perspective transformation directly to the image
     let ciImage = CIImage(cgImage: image)
     let filter = CIFilter.perspectiveTransform()
-    
+
     let w = CGFloat(width)
     let h = CGFloat(height)
-    
-    // From original JS transformation: top gets narrower by 8% on each side
-    // CIFilter uses bottom-left origin
-    filter.setValue(ciImage, forKey: kCIInputImageKey)
-    filter.topLeft = CGPoint(x: w * 0.08, y: h)    // Top-left: inset 8%
-    filter.topRight =  CGPoint(x: w * 0.92, y: h)  // Top-right: inset to 92%
-    filter.bottomLeft = CGPoint(x: 0, y: 0)        // Bottom-left: no change
-    filter.bottomRight = CGPoint(x: w, y: 0)       // Bottom-right: no change
-    
+
+    filter.inputImage = ciImage
+    filter.topLeft = CGPoint(x: w * 0.08, y: h)
+    filter.topRight = CGPoint(x: w * 0.92, y: h)
+    filter.bottomLeft = CGPoint(x: 0, y: 0)
+    filter.bottomRight = CGPoint(x: w, y: 0)
+
     guard let outputImage = filter.outputImage else { return nil }
-    
-    // Create context for the final image
-    guard let ctx = cgContext(width: width, height: height) else { return nil }
-    
-    ctx.clear(CGRect(x: 0, y: 0, width: width, height: height))
-    
+
+    let inputExtent = ciImage.extent
+    let croppedImage = outputImage.cropped(to: inputExtent)
+
     let ciContext = CIContext()
-    guard let finalCGImage = ciContext.createCGImage(outputImage, from: outputImage.extent) else { return nil }
-    
-    // Crop to original size if needed
-    if finalCGImage.width == width && finalCGImage.height == height {
-        return finalCGImage
-    } else {
-        let sourceRect = CGRect(x: 0, y: 0, width: width, height: height)
-        return finalCGImage.cropping(to: sourceRect)
-    }
+    return ciContext.createCGImage(croppedImage, from: inputExtent)
 }
 
 func resizeImage(image: CGImage, width: Int, height: Int) -> CGImage? {
     guard let ctx = cgContext(width: width, height: height) else { return nil }
 
+    ctx.interpolationQuality = .high
     ctx.clear(CGRect(x: 0, y: 0, width: width, height: height))
     ctx.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
-    
+
     return ctx.makeImage()
 }
 
@@ -75,10 +63,10 @@ func compositeImages(baseImage: CGImage, overlayImage: CGImage, offsetY: CGFloat
     let overlayHeight = overlayImage.height
     
     // Center horizontally and vertically, then apply upward offset
-    // CoreGraphics uses bottom-left origin, so we need to flip Y coordinate
+    // CoreGraphics uses bottom-left origin, positive offsetY moves overlay up
     let x = CGFloat(width - overlayWidth) / 2.0
     let centerY = CGFloat(height - overlayHeight) / 2.0
-    let y = centerY + offsetY  // In CoreGraphics, positive Y moves up from bottom-left origin
+    let y = centerY + offsetY
     
     
     // Draw overlay image
@@ -106,7 +94,7 @@ func saveImage(_ image: CGImage, to path: String) -> Bool {
 
 // Main program
 guard CommandLine.arguments.count == 4 else {
-    print("Usage: compose-icon <app-icon-path> <mount-icon-path> <output-path>")
+    fputs("Usage: compose-icon <app-icon-path> <mount-icon-path> <output-path>\n", stderr)
     exit(1)
 }
 
@@ -116,7 +104,7 @@ let outputPath = CommandLine.arguments[3]
 
 guard let appImage = loadImage(from: appIconPath),
       let mountImage = loadImage(from: mountIconPath) else {
-    print("Error: Could not load input images")
+    fputs("Error: Could not load input images\n", stderr)
     exit(1)
 }
 
@@ -129,20 +117,20 @@ guard let transformedAppImage = perspectiveTransform(
     width: appIconSize.width,
     height: appIconSize.height
 ) else {
-    print("Error: Could not apply perspective transformation")
+    fputs("Error: Could not apply perspective transformation\n", stderr)
     exit(1)
 }
 
 // Resize app icon to fit inside mount icon (from JS: width / 1.58, height / 1.82)
-let resizedWidth = Int(Double(mountIconSize.width) / 1.58)
-let resizedHeight = Int(Double(mountIconSize.height) / 1.82)
+let resizedWidth = Int((Double(mountIconSize.width) / 1.58).rounded())
+let resizedHeight = Int((Double(mountIconSize.height) / 1.82).rounded())
 
 guard let resizedAppImage = resizeImage(
     image: transformedAppImage,
     width: resizedWidth,
     height: resizedHeight
 ) else {
-    print("Error: Could not resize app image")
+    fputs("Error: Could not resize app image\n", stderr)
     exit(1)
 }
 
@@ -154,12 +142,12 @@ guard let composedImage = compositeImages(
     overlayImage: resizedAppImage,
     offsetY: offsetY
 ) else {
-    print("Error: Could not composite images")
+    fputs("Error: Could not composite images\n", stderr)
     exit(1)
 }
 
 // Save result
 guard saveImage(composedImage, to: outputPath) else {
-    print("Error: Could not save output image")
+    fputs("Error: Could not save output image\n", stderr)
     exit(1)
 }
