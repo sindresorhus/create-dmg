@@ -4,3 +4,4 @@ yarn.lock
 /compose-icon
 /.build
 /xcuserdata
+.DS_Store
