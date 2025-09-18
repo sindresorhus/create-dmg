@@ -1,2 +1,7 @@
 node_modules
 yarn.lock
+.build
+/compose-icon
+/.build
+/xcuserdata
+.DS_Store
