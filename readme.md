@@ -22,7 +22,7 @@ npm install --global create-dmg
 $ create-dmg --help
 
   Usage
-    $ create-dmg <app> [destination]
+    $ create-dmg [options] <output_name.dmg> <source_folder>
 
   Options
     --overwrite                  Overwrite existing DMG with the same name
@@ -32,8 +32,7 @@ $ create-dmg --help
     --no-code-sign               Skip code signing the DMG
 
   Examples
-    $ create-dmg 'Lungo.app'
-    $ create-dmg 'Lungo.app' Build/Releases
+    $ create-dmg Lungo.dmg ./source_folder
 ```
 
 ## DMG
